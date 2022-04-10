@@ -2,6 +2,7 @@ import 'package:app/pages/home/presentation/controllers/home_controller.dart';
 import 'package:app/routes/app_pages.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
