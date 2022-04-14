@@ -1,9 +1,10 @@
+import 'package:app/services/api_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class Maker extends StatefulWidget {
@@ -213,7 +214,14 @@ class MakerState extends State<Maker> {
                 ),
               ),
               ElevatedButton.icon(
-                  onPressed: () => {Get.back()},
+                  onPressed: () => {
+                    fetchWinningLottoNumbers(number).then((value) => {
+                      // 넘버를 표시한다.
+                      Fluttertoast.showToast(msg:value.numbers.toString())
+                    }).catchError((error,stackTrace)=>{
+                      Fluttertoast.showToast(msg:error)
+                    })
+                  },
                   icon: const FaIcon(FontAwesomeIcons.inbox),
                   label: const Text("생성하기"))
             ],
