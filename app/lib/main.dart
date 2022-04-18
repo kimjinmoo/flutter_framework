@@ -1,5 +1,7 @@
 import 'package:app/constants/Environment.dart';
+import 'package:app/firebase_options.dart';
 import 'package:app/routes/app_pages.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -12,6 +14,11 @@ void main() async {
   // 지연 완료 후 FlutterNativeSplash.remove() 호출
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  // 파이어베이스 적용
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // 스크린 모드를 설정한다.
   // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);

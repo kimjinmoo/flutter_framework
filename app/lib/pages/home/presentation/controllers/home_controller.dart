@@ -1,21 +1,41 @@
+import 'package:app/services/firebase_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  var count = 0.obs;
+  final commentFormKey = GlobalKey<FormState>();
+  final commentController = TextEditingController();
 
-  var num1 = 0.obs;
-  var num2 = 0.obs;
-  var num3 = 0.obs;
-  var num4 = 0.obs;
-  var num5 = 0.obs;
-  var num6 = 0.obs;
+  var command = "".obs;
 
-  increment() => count++;
+
+  clear() => commentController.clear();
 
   @override
   void onInit() {
     // 스플래시 화면을 종료한다.
     FlutterNativeSplash.remove();
+    // text 업데이트
+    commentController.addListener(() {
+      command.value = commentController.text;
+    });
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    commentController.dispose();
+    super.onClose();
+  }
+
+  void add() {
+    addCommand(
+      1,
+      commentController.text
+    ).then((res){
+      Get.snackbar('결과', "입력되었습니다.");
+      clear();
+    });
   }
 }
