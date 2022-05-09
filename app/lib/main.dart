@@ -25,7 +25,7 @@ void main() async {
   runApp(GetMaterialApp(
     theme: ThemeData(
         appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle.light,
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
         )
     ),
     darkTheme: ThemeData(

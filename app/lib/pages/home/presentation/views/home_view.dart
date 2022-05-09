@@ -29,12 +29,12 @@ class Home extends GetView<HomeController> {
                 child: Obx(
                   () => DraggableScrollableSheet(
                     initialChildSize: keyboardHeight +
-                        0.14 +
+                        0.20 +
                         (controller.getCommentLine() * 0.01),
                     minChildSize: keyboardHeight +
-                        0.14 +
+                        0.20 +
                         (controller.getCommentLine() * 0.01),
-                    maxChildSize: keyboardHeight + 0.35,
+                    maxChildSize: keyboardHeight + 0.40,
                     builder: (BuildContext context,
                         ScrollController scrollController) {
                       return Container(
@@ -91,9 +91,10 @@ class Home extends GetView<HomeController> {
       resizeToAvoidBottomInset: false,
       // count가 변경 될 때마다 Obx(()=> 를 사용하여 Text()에 업데이트합니다.
       appBar: AppBar(
+          centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
-        title:
-            const Text("ㅈㅈㄱㄹㄷ", style: TextStyle(color: Colors.black)),
+        title: const Text("ㅈㅈㄱㄹㄷ", style: TextStyle(color: Colors.black))
+            ,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
@@ -312,7 +313,6 @@ class _CommandItem extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     bool isOwner = model.userId == controller.userId;
-    print("modelId : ${isOwner}");
     return Column(
       children: [
         Card(
