@@ -2,8 +2,9 @@ import 'package:app/pages/home/presentation/views/home_view.dart';
 import 'package:app/pages/home/presentation/views/maker_view.dart';
 import 'package:app/pages/home/presentation/views/qrcode_view.dart';
 import 'package:app/pages/home/presentation/views/week_view.dart';
-import 'package:app/pages/side/presentation/about_view.dart';
-import 'package:app/pages/side/presentation/history_view.dart';
+import 'package:app/pages/side/presentation/views/about_view.dart';
+import 'package:app/pages/side/presentation/views/qna_view.dart';
+import 'package:app/pages/side/presentation/views/status_view.dart';
 import 'package:get/get.dart';
 
 part './app_routes.dart';
@@ -33,10 +34,11 @@ class AppPages {
     ),
     GetPage(
         name: Routes.SIDE,
-        page: () => History(),
+        page: () => LottoStatisticsWebview(),
         children: [
-          GetPage(name: Routes.SIDE_HISTORY, page: () => History(), transition: Transition.rightToLeft),
-          GetPage(name: Routes.SIDE_ABOUT, page: ()=>About(), transition: Transition.rightToLeft)
+          GetPage(name: Routes.SIDE_STATUS, page: () => LottoStatisticsWebview(), transition: Transition.rightToLeft),
+          GetPage(name: Routes.SIDE_QNA, page: ()=>QnaWebview(), transition: Transition.rightToLeft),
+          GetPage(name: Routes.SIDE_ABOUT, page: ()=>About(), transition: Transition.rightToLeft),
         ])
   ];
 }

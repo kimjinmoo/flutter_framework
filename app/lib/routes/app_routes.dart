@@ -9,6 +9,7 @@ abstract class Routes {
 
   // side 메뉴
   static const SIDE = "/side-menu";
-  static const SIDE_HISTORY = "/history";
+  static const SIDE_STATUS = "/status";
+  static const SIDE_QNA = "/qna";
   static const SIDE_ABOUT = "/about";
 }

@@ -1,90 +1,55 @@
-import 'package:app/services/api_service.dart';
+import 'package:app/pages/home/presentation/controllers/home_controller.dart';
+import 'package:app/pages/home/presentation/controllers/maker_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-class Maker extends StatefulWidget {
-  @override
-  State createState() {
-    return MakerState();
-  }
-}
-
-// 로또번호 생성기
-class MakerState extends State<Maker> {
-
-  // 번호
-  List<int> number = [1,2,3,4,5,6];
-
-  // 자동 생성 여부
-  bool _numAuto1 = true;
-
-  // 자동 생성 여부
-  bool _numAuto2 = true;
-
-  // 자동 생성 여부
-  bool _numAuto3 = true;
-
-  // 자동 생성 여부
-  bool _numAuto4 = true;
-
-  // 자동 생성 여부
-  bool _numAuto5 = true;
-
-  // 자동 생성 여부
-  bool _numAuto6 = true;
-
-  // 값을 체크 한다.
-  checkValue(num, minValue, maxValue) {
-    int checkNumber = num;
-    // 최대값을 초과 하면 최소값으로 변경한다.
-    if(checkNumber > maxValue ) {
-      checkNumber = minValue;
-    }
-    if(number.contains(checkNumber)) {
-      return checkValue(checkNumber+1, minValue, maxValue);
-    }
-    return checkNumber;
-  }
+///
+/// 로또번호를 생성한다.
+///
+class Maker extends GetView {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    Get.put(HomeController());
+    Get.put(MakerController());
+    return GetBuilder<MakerController>(
+      builder: (controller) => Scaffold(
         appBar: AppBar(
-          title: const Text("번호 생성"),
+            iconTheme: const IconThemeData(color: Colors.black),
+            title:
+            const Text("AI 번호 생성기", style: TextStyle(color: Colors.black)),
+            backgroundColor: Colors.transparent,
+            elevation: 0.0
         ),
         body: Container(
           alignment: Alignment.center,
-          child: Column(
+          child: Obx(()=>Column(
             children: [
-              Text('${dotenv.env['API_URL']}'),
               Container(
                 padding: const EdgeInsets.only(top: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Checkbox(
-                        value: _numAuto1,
-                        onChanged: (value) => setState(() => _numAuto1 = value!)),
-                    _numAuto1 ? const Text("자동") : const Text("수동"),
-                    !_numAuto1 ?
+                        value: controller.numAutos.value[0],
+                        onChanged: (value) => controller.onChange(0, value!)),
+                    controller.numAutos.value[0] ? const Text("자동") : const Text("수동"),
+                    !controller.numAutos.value[0] ?
                     NumberPicker(
                         axis: Axis.horizontal,
                         haptics: true,
                         minValue: 1,
                         maxValue: 45,
-                        value: number[0],
+                        value: controller.number.value[0],
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: Colors.black26),
                         ),
-                        onChanged: (value) => setState(() {
-                          number[0] = checkValue(value, 1, 45);
-                        })):const Text("")
+                        onChanged: (value) => controller.onChangeValue(0, value, 1, 45)):const Text("")
                   ],
                 ),
               ),
@@ -94,22 +59,20 @@ class MakerState extends State<Maker> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Checkbox(
-                        value: _numAuto2,
-                        onChanged: (value) => setState(() => _numAuto2 = value!)),
-                    _numAuto2 ? const Text("자동") : const Text("수동"),
-                    !_numAuto2 ?NumberPicker(
+                        value: controller.numAutos.value[1],
+                        onChanged: (value) => controller.onChange(1, value!)),
+                    controller.numAutos.value[1] ? const Text("자동") : const Text("수동"),
+                    !controller.numAutos.value[1] ?NumberPicker(
                         axis: Axis.horizontal,
                         haptics: true,
                         minValue: 1,
                         maxValue: 45,
-                        value: number[1],
+                        value: controller.number.value[1],
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: Colors.black26),
                         ),
-                        onChanged: (value) => setState(() {
-                          number[1] = checkValue(value, 1, 45);
-                        })):const Text("")
+                        onChanged: (value) => controller.onChangeValue(1, value, 1, 45)):const Text("")
                   ],
                 ),
               ),
@@ -119,22 +82,20 @@ class MakerState extends State<Maker> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Checkbox(
-                        value: _numAuto3,
-                        onChanged: (value) => setState(() => _numAuto3 = value!)),
-                    _numAuto3 ? const Text("자동") : const Text("수동"),
-                    !_numAuto3 ?NumberPicker(
+                        value: controller.numAutos.value[2],
+                        onChanged: (value) => controller.onChange(2, value!)),
+                    controller.numAutos.value[2] ? const Text("자동") : const Text("수동"),
+                    !controller.numAutos.value[2] ?NumberPicker(
                         axis: Axis.horizontal,
                         haptics: true,
                         minValue: 1,
                         maxValue: 45,
-                        value: number[2],
+                        value: controller.number.value[2],
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: Colors.black26),
                         ),
-                        onChanged: (value) => setState(() {
-                          number[2] = checkValue(value, 1, 45);
-                        })):const Text("")
+                        onChanged: (value) => controller.onChangeValue(2, value, 1, 45)):const Text("")
                   ],
                 ),
               ),
@@ -144,22 +105,20 @@ class MakerState extends State<Maker> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Checkbox(
-                        value: _numAuto4,
-                        onChanged: (value) => setState(() => _numAuto4 = value!)),
-                    _numAuto4 ? const Text("자동") : const Text("수동"),
-                    !_numAuto4 ?NumberPicker(
+                        value: controller.numAutos.value[3],
+                        onChanged: (value) => controller.onChange(3, value!)),
+                    controller.numAutos.value[3] ? const Text("자동") : const Text("수동"),
+                    !controller.numAutos.value[3] ?NumberPicker(
                         axis: Axis.horizontal,
                         haptics: true,
                         minValue: 1,
                         maxValue: 45,
-                        value: number[3],
+                        value: controller.number.value[3],
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: Colors.black26),
                         ),
-                        onChanged: (value) => setState(() {
-                          number[3] = checkValue(value, 1, 45);
-                        })):Text("")
+                        onChanged: (value) => controller.onChangeValue(3, value, 1, 45)):Text("")
                   ],
                 ),
               ),
@@ -169,22 +128,20 @@ class MakerState extends State<Maker> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Checkbox(
-                        value: _numAuto5,
-                        onChanged: (value) => setState(() => _numAuto5 = value!)),
-                    _numAuto5 ? const Text("자동") : const Text("수동"),
-                    !_numAuto5 ?NumberPicker(
+                        value: controller.numAutos.value[4],
+                        onChanged: (value) => controller.onChange(4, value!)),
+                    controller.numAutos.value[4] ? const Text("자동") : const Text("수동"),
+                    !controller.numAutos.value[4] ?NumberPicker(
                         axis: Axis.horizontal,
                         haptics: true,
                         minValue: 1,
                         maxValue: 45,
-                        value: number[4],
+                        value: controller.number.value[4],
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: Colors.black26),
                         ),
-                        onChanged: (value) => setState(() {
-                          number[4] = checkValue(value, 1, 45);
-                        })):const Text("")
+                        onChanged: (value) => controller.onChangeValue(4, value, 1, 45)):const Text("")
                   ],
                 ),
               ),
@@ -194,39 +151,67 @@ class MakerState extends State<Maker> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Checkbox(
-                        value: _numAuto6,
-                        onChanged: (value) => setState(() => _numAuto6 = value!)),
-                    _numAuto6 ? const Text("자동") : const Text("수동"),
-                    !_numAuto6 ?NumberPicker(
+                        value: controller.numAutos.value[5],
+                        onChanged: (value) => controller.onChange(5, value!)),
+                    controller.numAutos.value[5] ? const Text("자동") : const Text("수동"),
+                    !controller.numAutos.value[5] ?NumberPicker(
                         axis: Axis.horizontal,
                         haptics: true,
                         minValue: 1,
                         maxValue: 45,
-                        value: number[5],
+                        value: controller.number.value[5],
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: Colors.black26),
                         ),
-                        onChanged: (value) => setState(() {
-                          number[5] = checkValue(value, 1, 45);
-                        })):const Text("")
+                        onChanged: (value) => controller.onChangeValue(5, value, 1, 45)):const Text("")
                   ],
                 ),
               ),
-              ElevatedButton.icon(
-                  onPressed: () => {
-                    fetchWinningLottoNumbers(number).then((value) => {
-                      // 넘버를 표시한다.
-                      Fluttertoast.showToast(msg:value.numbers.toString())
-                    }).catchError((error,stackTrace)=>{
-                      Fluttertoast.showToast(msg:error)
-                    })
-                  },
-                  icon: const FaIcon(FontAwesomeIcons.inbox),
-                  label: const Text("생성하기"))
             ],
-          ),
-        ));
+          )),
+        ),
+        bottomNavigationBar: GetBuilder<HomeController>(
+            builder: (homeController) {
+              return Obx(()=>ElevatedButton.icon(
+                  onPressed: (controller.isProcess.value || homeController.isProgress.value)?null:() async => {
+                    controller.onCheckLottoNumber(),
+                    if(controller.isValid.value) {
+                      // 현재 회차 조회
+                      await homeController.fetchCurrentRoundInit(),
+                      // 등록
+                      await controller
+                                .createNumbers(
+                                    homeController.userId.value,
+                                    homeController.nRound.value,
+                                    controller.getValues(),
+                                    0)
+                                .onError((error, stackTrace) =>
+                                    Get.snackbar("에러", "로또 번호 등록에 실패 하였습니다.", snackPosition: SnackPosition.BOTTOM,)),
+                            // 현재 회차 조회
+                      await homeController.setRound(homeController.nRound.value),
+                      // 넘버를 표시한다.
+                      Get.back()
+                    } else {
+                      Get.snackbar("경고", "중복된 번호가 존재합니다.",
+                        backgroundColor: Colors.redAccent,
+                        snackPosition: SnackPosition.TOP,
+                        forwardAnimationCurve: Curves.elasticInOut,
+                        reverseAnimationCurve: Curves.easeOut,)
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red, // we can set primary color
+                    onPrimary: Colors.black87, // change color of child prop
+                    onSurface: Colors.blue, // surface color
+                    shadowColor: Colors.grey,
+                    minimumSize: Size.fromHeight(70),
+                  ),
+                  icon: (controller.isProcess.value || homeController.isProgress.value)?const CircularProgressIndicator():const FaIcon(FontAwesomeIcons.inbox),
+                  label: const Text("번호 생성", style: TextStyle(color: Colors.white),)));
+            }),
+      ),
+    );
   }
 }
 

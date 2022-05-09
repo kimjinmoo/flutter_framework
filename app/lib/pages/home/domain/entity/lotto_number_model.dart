@@ -19,4 +19,16 @@ class LottoNumberModel{
   factory LottoNumberModel.fromJson(jsonString) => LottoNumberModel(
     numbers: List<int>.from(json.decode(jsonString))
   );
+
+  Map<String, Object?> toJson() {
+    return {
+      'num1': numbers[0],
+      'num2': numbers[1],
+      'num3': numbers[2],
+      'num4': numbers[3],
+      'num5': numbers[4],
+      'num6': numbers[5],
+      'numEx': 0
+    };
+  }
 }

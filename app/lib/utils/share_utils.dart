@@ -1,13 +1,13 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 // 저장한다.
-save(prefs) async {
+saveAsString(key, value) async {
   final prefs = await SharedPreferences.getInstance();
-
+  prefs.setString(key, value);
 }
 
 // 읽는다.
-read(prefs) async {
+Future<String?> readAsString(key) async {
   final prefs = await SharedPreferences.getInstance();
-
+  return prefs.getString(key);
 }
