@@ -45,6 +45,18 @@ class WinningNumber {
     return "${this.num1.toString().padLeft(2, '0')} ${this.num2.toString().padLeft(2, '0')} ${this.num3.toString().padLeft(2, '0')} ${this.num4.toString().padLeft(2, '0')} ${this.num5.toString().padLeft(2, '0')} ${this.num6.toString().padLeft(2, '0')} + ${this.numEx.toString().padLeft(2, '0')}";
   }
 
+  List<int> getPrice() {
+    return [
+      rank1pay,rank2pay,rank3pay,rank4pay,rank5pay
+    ];
+  }
+
+  List<int> getWinners() {
+    return [
+      winners1,winners2,winners3,winners4,winners5
+    ];
+  }
+
   // Redirecting 생성자를 통해 생성
   WinningNumber.fromJson(Map<String, Object?> json)
       : this(

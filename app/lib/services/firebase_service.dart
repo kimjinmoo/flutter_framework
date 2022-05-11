@@ -14,7 +14,7 @@ final userRef = FirebaseFirestore.instance.collection("user").withConverter<User
   fromFirestore: (snapshots, _) => UserModel.fromJson(snapshots.data()!),
   toFirestore: (command, _) => command.toJson(),
 );
-final userLottoRef = FirebaseFirestore.instance.collection("lotte").withConverter<UserLottoModel>(
+final userLottoRef = FirebaseFirestore.instance.collection("lotto").withConverter<UserLottoModel>(
   fromFirestore: (snapshots, _) => UserLottoModel.fromJson(snapshots.data()!),
   toFirestore: (command, _) => command.toJson(),
 );
@@ -36,7 +36,37 @@ extension on Query<CommandsModel> {
 
 /// 댓글 조회하기
 Stream<QuerySnapshot<CommandsModel>> getFirebaseInstance(query, round) {
-  return commandRef.where('round', isEqualTo: round).queryBy(query).snapshots();
+  return commandRef.where('round', isEqualTo: round).queryBy(query).limit(100).snapshots();
+}
+
+///
+/// 유저를 업데이트한다.
+///
+/// [userId]는 필수값이다.
+/// [userName]은 변경될 유저 명이다.
+Future<UserModel> updateUserName(String userId, String userName) async {
+  QuerySnapshot<UserModel> user = await userRef.where("userId", isEqualTo: userId).get();
+  if(user.docs.isNotEmpty) {
+    // 유저명 변경
+    UserModel userModel = user.docs.first.data();
+    UserModel updatedUserModel = UserModel(userId: userModel.userId, userName: userName, regDate: userModel.regDate);
+    userRef.doc(user.docs.first.reference.id).set(updatedUserModel);
+    // 코맨트명 변경
+    QuerySnapshot<CommandsModel> commands = await commandRef.where("userId", isEqualTo: userId).get();
+    if(commands.docs.isNotEmpty) {
+      commands.docs.forEach((element) {
+        CommandsModel command = element.data();
+        commandRef.doc(element.reference.id).set(CommandsModel(
+            userId: command.userId,
+            userName: updatedUserModel.userName,
+            command: command.command,
+            round: command.round,
+            regDate: command.regDate));
+      });
+    }
+    return updatedUserModel;
+  }
+  throw Future.error("없는 유저입니다,");
 }
 
 /// 댓글 추가하기
@@ -46,12 +76,17 @@ Future<void> addCommand(commandsModel) async {
 }
 
 /// 댓글 업데이트
-Future<void> _updateCommand(widget) async {
+Future<void> updateCommand(widget) async {
   int updated = await FirebaseFirestore.instance
       .runTransaction<int>((transaction) async {
     DocumentSnapshot<CommandsModel> command = await transaction.get<CommandsModel>(widget.reference);
     return 0;
     });
+}
+
+/// 댓글을 삭제한다.
+Future<void> deleteComment(id) async {
+  await commandRef.doc(id).delete();
 }
 
 // 유저값을 가져온다.
@@ -81,13 +116,11 @@ Future<UserLottoModel> fetchMyLotto(int round, String userId) async {
 ///
 Future<void> addMyLotto(UserLottoModel userLottoModel) async {
   QuerySnapshot<UserLottoModel> querySnapshot = await userLottoRef.where("round", isEqualTo: userLottoModel.round).where("userId", isEqualTo: userLottoModel.userId).get();
-  print("addMyLotto");
   if(querySnapshot.docs.isNotEmpty) {
     // ID를 가져온다.
     var id = querySnapshot.docs[0].reference.id;
     // 데이터를 가져온다.
     List<MyLottoNumber> numbers = querySnapshot.docs[0].data().numbers;
-    print("data : ${numbers.length}");
     if(!numbers.isNotEmpty) {
       // 등록된 번호가 없다면 추가
       await userLottoRef.add(userLottoModel);

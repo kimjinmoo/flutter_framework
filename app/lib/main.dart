@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app/constants/Environment.dart';
 import 'package:app/firebase_options.dart';
 import 'package:app/routes/app_pages.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 void main() async {
   // 환경 변수를 읽는다.
@@ -19,6 +22,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // 웹뷰 초기화
+  if(Platform.isAndroid) WebView.platform = AndroidWebView();
 
   // 스크린 모드를 설정한다.
   // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);

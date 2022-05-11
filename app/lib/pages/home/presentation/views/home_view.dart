@@ -3,16 +3,15 @@ import 'package:app/pages/home/presentation/controllers/home_controller.dart';
 import 'package:app/routes/app_pages.dart';
 import 'package:app/services/firebase_service.dart';
 import 'package:app/utils/time_utils.dart';
+import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:badges/badges.dart';
 
 // 홈
 class Home extends GetView<HomeController> {
-
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -29,12 +28,12 @@ class Home extends GetView<HomeController> {
                 child: Obx(
                   () => DraggableScrollableSheet(
                     initialChildSize: keyboardHeight +
-                        0.20 +
+                        0.17 +
                         (controller.getCommentLine() * 0.01),
                     minChildSize: keyboardHeight +
-                        0.20 +
+                        0.17 +
                         (controller.getCommentLine() * 0.01),
-                    maxChildSize: keyboardHeight + 0.40,
+                    maxChildSize: keyboardHeight + 0.36,
                     builder: (BuildContext context,
                         ScrollController scrollController) {
                       return Container(
@@ -91,10 +90,9 @@ class Home extends GetView<HomeController> {
       resizeToAvoidBottomInset: false,
       // count가 변경 될 때마다 Obx(()=> 를 사용하여 Text()에 업데이트합니다.
       appBar: AppBar(
-          centerTitle: true,
+        centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
-        title: const Text("ㅈㅈㄱㄹㄷ", style: TextStyle(color: Colors.black))
-            ,
+        title: const Text("ㅈㅈㄱㄹㄷ", style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
@@ -104,17 +102,24 @@ class Home extends GetView<HomeController> {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              child: Stack(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Positioned(
-                    bottom: 8.0,
-                    left: 4.0,
-                    child: Obx(() => Text(
-                          controller.userName.value,
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 20),
-                        )),
-                  )
+                  Obx(() => Text(
+                        controller.userName.value,
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 20),
+                      )),
+                  IconButton(
+                      onPressed: () {
+                        Get.toNamed("${Routes.SIDE}${Routes.SIDE_SETTING}");
+                      },
+                      icon: const Icon(
+                        Icons.settings,
+                        color: Colors.white70,
+                        size: 20,
+                      )),
                 ],
               ),
               decoration: const BoxDecoration(
@@ -148,33 +153,62 @@ class Home extends GetView<HomeController> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("내 로또번호"),
-              IconButton(
-                  onPressed: () {
+              const Text("내 로또번호", style: TextStyle(fontSize: 15, color: Colors.black54, fontWeight: FontWeight.bold),),
+              Padding(padding: EdgeInsets.only(left: 10),child: InkWell(
+                  onTap: () {
                     Get.toNamed("${Routes.HOME}${Routes.HOME_WEEK}");
                   },
-                  icon: Obx(() => Badge(
+                  child: Obx(() => Badge(
                       animationType: BadgeAnimationType.slide,
                       badgeColor: Colors.black,
-                      showBadge:
-                          controller.myLotteHistory.value.numbers.length > 1,
                       alignment: Alignment.bottomRight,
                       badgeContent: Text(
-                          "${controller.myLotteHistory.value.numbers.length}",
+                          "${controller.myLottoHistory.value.numbers.length}",
                           style: TextStyle(color: Colors.white70)),
                       child: const FaIcon(
                         FontAwesomeIcons.rectangleList,
                         size: 24,
-                      ))))
+                      )))))
             ],
           ),
-          Obx(() => Text(controller.firstNumber.value,
-              style: TextStyle(fontSize: 20))),
           const Padding(padding: EdgeInsets.only(bottom: 10, top: 10)),
-          Container(
-            alignment: Alignment.topLeft,
-            padding: const EdgeInsets.only(left: 15),
-            child: Obx(() => Text("${controller.round.value} 회차 당첨번호")),
+          Row(
+            children: [
+              Container(
+                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.only(left: 10),
+                child: Obx(() => Text("${controller.round.value} 회차 당첨번호", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54),)),
+              ),
+              Container(
+                width: 30,
+                height: 30,
+                child: Obx(()=>
+                controller.roundPrice.value.length > 0 ?
+                Padding(padding: EdgeInsets.only(left: 5), child: InkWell(
+                  onTap: (){
+                    Get.dialog(AlertDialog(
+                      title: Text("추가 정보"),
+                      content: Column(
+                        children: [
+                          Text("1등 당첨금액: ${controller.roundPrice.value[0]} / ${controller.roundWinners.value[0]}"),
+                          Text("2등 당첨금액: ${controller.roundPrice.value[1]} / ${controller.roundWinners.value[1]}"),
+                          Text("3등 당첨금액: ${controller.roundPrice.value[2]} / ${controller.roundWinners.value[2]}"),
+                          Text("4등 당첨금액: ${controller.roundPrice.value[3]} / ${controller.roundWinners.value[3]}"),
+                          Text("5등 당첨금액: ${controller.roundPrice.value[4]} / ${controller.roundWinners.value[4]}"),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () => Get.back(),
+                            child: const Text("확인")),
+                      ],
+                    ));
+                  },
+                  child: Icon(Icons.info_outlined),
+                )):SizedBox()
+                ),
+              )
+            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -183,7 +217,7 @@ class Home extends GetView<HomeController> {
                   onPressed: controller.isProgress.value
                       ? null
                       : () {
-                          controller.beforeRound();
+                          controller.beforeRound().onError((error, stackTrace) => Get.snackbar("안내", error.toString()));
                         },
                   icon: const FaIcon(FontAwesomeIcons.angleLeft))),
               Expanded(
@@ -193,7 +227,7 @@ class Home extends GetView<HomeController> {
                     child: Obx(() => controller.isProgress.value
                         ? const Text('읽는중')
                         : Text(
-                            controller.roundWinningNumber.value,
+                            controller.roundWinnerNumber.value,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black54,
@@ -205,29 +239,38 @@ class Home extends GetView<HomeController> {
                   onPressed: controller.isProgress.value
                       ? null
                       : () {
-                          controller.nextRound();
+                          controller.nextRound().onError((error, stackTrace) => Get.snackbar("안내", error.toString()));
                         },
                   icon: const FaIcon(FontAwesomeIcons.angleRight)))
             ],
           ),
           Padding(
-              padding: EdgeInsets.only(left: 10, right: 10),
+            padding: EdgeInsets.only(left: 10, right: 10),
             child: ElevatedButton(
               onPressed: numberMaker,
-              child: const Text("AI 번호 생성", style: TextStyle(color: Colors.black87),),
+              child: const Text(
+                "AI 로또 번호 뽑기!!",
+                style: TextStyle(color: Colors.white70),
+              ),
               style: ElevatedButton.styleFrom(
                 textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 // We can change style of this beautiful elevated button thanks to style prop
                 minimumSize: const Size.fromHeight(40),
-                primary: Colors.white, // we can set primary color
-                onPrimary: Colors.white, // change color of child prop
-                onSurface: Colors.blue, // surface color
-                shadowColor: Colors.grey, //shadow prop is a very nice prop for every button or card widgets.
-                elevation: 1, // we can set elevation of this beautiful button
+                primary: Colors.amber,
+                // we can set primary color
+                onPrimary: Colors.white,
+                // change color of child prop
+                onSurface: Colors.blue,
+                // surface color
+                shadowColor: Colors.grey,
+                //shadow prop is a very nice prop for every button or card widgets.
+                elevation: 1,
+                // we can set elevation of this beautiful button
                 side: BorderSide(
                     color: Colors.black, //change border color
                     width: 2, //change border width
-                    style: BorderStyle.solid), // change border side of this beautiful button
+                    style: BorderStyle.solid),
+                // change border side of this beautiful button
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(
                       10), //change border radius of this beautiful button thanks to BorderRadius.circular function
@@ -349,7 +392,7 @@ class _CommandItem extends GetView<HomeController> {
                               style: GoogleFonts.roboto(
                                 fontSize: 16,
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ),
@@ -378,20 +421,45 @@ class _CommandItem extends GetView<HomeController> {
                                 padding: const EdgeInsets.only(right: 5.0),
                                 child: const Icon(
                                   Icons.people,
-                                  size: 15.0,
+                                  size: 25.0,
                                   color: Colors.blueAccent,
                                 ),
                               ),
                             ),
-                            model.userId == controller.userId
+                            model.userId == controller.userId.value
                                 ? WidgetSpan(
                                     child: Container(
                                       padding: const EdgeInsets.only(
                                           left: 15.0, right: 2.0),
-                                      child: const Icon(
-                                        Icons.clear,
-                                        size: 15.0,
-                                        color: Colors.red,
+                                      child: InkWell(
+                                        onTap: () {
+                                          Get.dialog(AlertDialog(
+                                            title: const Text("경고", style: TextStyle(color: Colors.red),),
+                                            content: const Text("삭제하시겠습니까?"),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () => Get.back(),
+                                                  child: const Text("취소")),
+                                              TextButton(
+                                                  onPressed: () async => {
+                                                        await controller
+                                                            .removeComment(
+                                                                reference.id),
+                                                        Get.back()
+                                                      },
+                                                  child: const Text(
+                                                    "삭제",
+                                                    style: TextStyle(
+                                                        color: Colors.red),
+                                                  )),
+                                            ],
+                                          ));
+                                        },
+                                        child: const Icon(
+                                          Icons.delete,
+                                          size: 25.0,
+                                          color: Colors.red,
+                                        ),
                                       ),
                                     ),
                                   )

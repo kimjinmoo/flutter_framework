@@ -11,7 +11,6 @@ import 'package:numberpicker/numberpicker.dart';
 /// 로또번호를 생성한다.
 ///
 class Maker extends GetView {
-
   @override
   Widget build(BuildContext context) {
     Get.put(HomeController());
@@ -19,197 +18,287 @@ class Maker extends GetView {
     return GetBuilder<MakerController>(
       builder: (controller) => Scaffold(
         appBar: AppBar(
+            centerTitle: true,
             iconTheme: const IconThemeData(color: Colors.black),
             title:
-            const Text("AI 번호 생성기", style: TextStyle(color: Colors.black)),
+                const Text("AI 번호 생성기", style: TextStyle(color: Colors.black)),
             backgroundColor: Colors.transparent,
-            elevation: 0.0
-        ),
+            elevation: 0.0),
         body: Container(
           alignment: Alignment.center,
-          child: Obx(()=>Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.only(top: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                        value: controller.numAutos.value[0],
-                        onChanged: (value) => controller.onChange(0, value!)),
-                    controller.numAutos.value[0] ? const Text("자동") : const Text("수동"),
-                    !controller.numAutos.value[0] ?
-                    NumberPicker(
-                        axis: Axis.horizontal,
-                        haptics: true,
-                        minValue: 1,
-                        maxValue: 45,
-                        value: controller.number.value[0],
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.black26),
-                        ),
-                        onChanged: (value) => controller.onChangeValue(0, value, 1, 45)):const Text("")
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                        value: controller.numAutos.value[1],
-                        onChanged: (value) => controller.onChange(1, value!)),
-                    controller.numAutos.value[1] ? const Text("자동") : const Text("수동"),
-                    !controller.numAutos.value[1] ?NumberPicker(
-                        axis: Axis.horizontal,
-                        haptics: true,
-                        minValue: 1,
-                        maxValue: 45,
-                        value: controller.number.value[1],
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.black26),
-                        ),
-                        onChanged: (value) => controller.onChangeValue(1, value, 1, 45)):const Text("")
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                        value: controller.numAutos.value[2],
-                        onChanged: (value) => controller.onChange(2, value!)),
-                    controller.numAutos.value[2] ? const Text("자동") : const Text("수동"),
-                    !controller.numAutos.value[2] ?NumberPicker(
-                        axis: Axis.horizontal,
-                        haptics: true,
-                        minValue: 1,
-                        maxValue: 45,
-                        value: controller.number.value[2],
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.black26),
-                        ),
-                        onChanged: (value) => controller.onChangeValue(2, value, 1, 45)):const Text("")
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                        value: controller.numAutos.value[3],
-                        onChanged: (value) => controller.onChange(3, value!)),
-                    controller.numAutos.value[3] ? const Text("자동") : const Text("수동"),
-                    !controller.numAutos.value[3] ?NumberPicker(
-                        axis: Axis.horizontal,
-                        haptics: true,
-                        minValue: 1,
-                        maxValue: 45,
-                        value: controller.number.value[3],
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.black26),
-                        ),
-                        onChanged: (value) => controller.onChangeValue(3, value, 1, 45)):Text("")
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                        value: controller.numAutos.value[4],
-                        onChanged: (value) => controller.onChange(4, value!)),
-                    controller.numAutos.value[4] ? const Text("자동") : const Text("수동"),
-                    !controller.numAutos.value[4] ?NumberPicker(
-                        axis: Axis.horizontal,
-                        haptics: true,
-                        minValue: 1,
-                        maxValue: 45,
-                        value: controller.number.value[4],
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.black26),
-                        ),
-                        onChanged: (value) => controller.onChangeValue(4, value, 1, 45)):const Text("")
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Checkbox(
-                        value: controller.numAutos.value[5],
-                        onChanged: (value) => controller.onChange(5, value!)),
-                    controller.numAutos.value[5] ? const Text("자동") : const Text("수동"),
-                    !controller.numAutos.value[5] ?NumberPicker(
-                        axis: Axis.horizontal,
-                        haptics: true,
-                        minValue: 1,
-                        maxValue: 45,
-                        value: controller.number.value[5],
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.black26),
-                        ),
-                        onChanged: (value) => controller.onChangeValue(5, value, 1, 45)):const Text("")
-                  ],
-                ),
-              ),
-            ],
-          )),
+          child: Obx(() => Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 15, right: 15),
+                    child: Text(
+                      "구매 횟수",
+                      style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Center(
+                    child: NumberPicker(
+                      value: controller.count.value,
+                      minValue: 1,
+                      maxValue: 100,
+                      step: 1,
+                      haptics: true,
+                      axis: Axis.horizontal,
+                      onChanged: (value) => controller.onChangeCount(value),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 15, right: 15),
+                    child: Text(
+                      "옵션",
+                      style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                            value: controller.numAutos.value[0],
+                            onChanged: (value) =>
+                                controller.onChange(0, value!)),
+                        controller.numAutos.value[0]
+                            ? const Text("자동")
+                            : const Text("수동"),
+                        !controller.numAutos.value[0]
+                            ? NumberPicker(
+                                axis: Axis.horizontal,
+                                haptics: true,
+                                minValue: 1,
+                                maxValue: 45,
+                                value: controller.number.value[0],
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.black26),
+                                ),
+                                onChanged: (value) =>
+                                    controller.onChangeValue(0, value, 1, 45))
+                            : const Text("")
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                            value: controller.numAutos.value[1],
+                            onChanged: (value) =>
+                                controller.onChange(1, value!)),
+                        controller.numAutos.value[1]
+                            ? const Text("자동")
+                            : const Text("수동"),
+                        !controller.numAutos.value[1]
+                            ? NumberPicker(
+                                axis: Axis.horizontal,
+                                haptics: true,
+                                minValue: 1,
+                                maxValue: 45,
+                                value: controller.number.value[1],
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.black26),
+                                ),
+                                onChanged: (value) =>
+                                    controller.onChangeValue(1, value, 1, 45))
+                            : const Text("")
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                            value: controller.numAutos.value[2],
+                            onChanged: (value) =>
+                                controller.onChange(2, value!)),
+                        controller.numAutos.value[2]
+                            ? const Text("자동")
+                            : const Text("수동"),
+                        !controller.numAutos.value[2]
+                            ? NumberPicker(
+                                axis: Axis.horizontal,
+                                haptics: true,
+                                minValue: 1,
+                                maxValue: 45,
+                                value: controller.number.value[2],
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.black26),
+                                ),
+                                onChanged: (value) =>
+                                    controller.onChangeValue(2, value, 1, 45))
+                            : const Text("")
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                            value: controller.numAutos.value[3],
+                            onChanged: (value) =>
+                                controller.onChange(3, value!)),
+                        controller.numAutos.value[3]
+                            ? const Text("자동")
+                            : const Text("수동"),
+                        !controller.numAutos.value[3]
+                            ? NumberPicker(
+                                axis: Axis.horizontal,
+                                haptics: true,
+                                minValue: 1,
+                                maxValue: 45,
+                                value: controller.number.value[3],
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.black26),
+                                ),
+                                onChanged: (value) =>
+                                    controller.onChangeValue(3, value, 1, 45))
+                            : Text("")
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                            value: controller.numAutos.value[4],
+                            onChanged: (value) =>
+                                controller.onChange(4, value!)),
+                        controller.numAutos.value[4]
+                            ? const Text("자동")
+                            : const Text("수동"),
+                        !controller.numAutos.value[4]
+                            ? NumberPicker(
+                                axis: Axis.horizontal,
+                                haptics: true,
+                                minValue: 1,
+                                maxValue: 45,
+                                value: controller.number.value[4],
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.black26),
+                                ),
+                                onChanged: (value) =>
+                                    controller.onChangeValue(4, value, 1, 45))
+                            : const Text("")
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                            value: controller.numAutos.value[5],
+                            onChanged: (value) =>
+                                controller.onChange(5, value!)),
+                        controller.numAutos.value[5]
+                            ? const Text("자동")
+                            : const Text("수동"),
+                        !controller.numAutos.value[5]
+                            ? NumberPicker(
+                                axis: Axis.horizontal,
+                                haptics: true,
+                                minValue: 1,
+                                maxValue: 45,
+                                value: controller.number.value[5],
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Colors.black26),
+                                ),
+                                onChanged: (value) =>
+                                    controller.onChangeValue(5, value, 1, 45))
+                            : const Text("")
+                      ],
+                    ),
+                  ),
+                ],
+              )),
         ),
-        bottomNavigationBar: GetBuilder<HomeController>(
-            builder: (homeController) {
-              return Obx(()=>ElevatedButton.icon(
-                  onPressed: (controller.isProcess.value || homeController.isProgress.value)?null:() async => {
-                    controller.onCheckLottoNumber(),
-                    if(controller.isValid.value) {
-                      // 현재 회차 조회
-                      await homeController.fetchCurrentRoundInit(),
-                      // 등록
-                      await controller
+        bottomNavigationBar:
+            GetBuilder<HomeController>(builder: (homeController) {
+          return Obx(() => ElevatedButton.icon(
+              onPressed: (controller.isProcess.value ||
+                      homeController.isProgress.value)
+                  ? null
+                  : () async => {
+                        controller.onCheckLottoNumber(),
+                        if (controller.isValid.value)
+                          {
+                            // 현재 회차 조회
+                            await homeController.fetchCurrentRoundInit(),
+                            // 등록
+                            await controller
                                 .createNumbers(
                                     homeController.userId.value,
                                     homeController.nRound.value,
                                     controller.getValues(),
-                                    0)
-                                .onError((error, stackTrace) =>
-                                    Get.snackbar("에러", "로또 번호 등록에 실패 하였습니다.", snackPosition: SnackPosition.BOTTOM,)),
+                                    controller.count.value)
+                                .onError((error, stackTrace) => Get.snackbar(
+                                      "에러",
+                                      error.toString(),
+                                      snackPosition: SnackPosition.BOTTOM,
+                                    )),
                             // 현재 회차 조회
-                      await homeController.setRound(homeController.nRound.value),
-                      // 넘버를 표시한다.
-                      Get.back()
-                    } else {
-                      Get.snackbar("경고", "중복된 번호가 존재합니다.",
-                        backgroundColor: Colors.redAccent,
-                        snackPosition: SnackPosition.TOP,
-                        forwardAnimationCurve: Curves.elasticInOut,
-                        reverseAnimationCurve: Curves.easeOut,)
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.red, // we can set primary color
-                    onPrimary: Colors.black87, // change color of child prop
-                    onSurface: Colors.blue, // surface color
-                    shadowColor: Colors.grey,
-                    minimumSize: Size.fromHeight(70),
-                  ),
-                  icon: (controller.isProcess.value || homeController.isProgress.value)?const CircularProgressIndicator():const FaIcon(FontAwesomeIcons.inbox),
-                  label: const Text("번호 생성", style: TextStyle(color: Colors.white),)));
-            }),
+                            await homeController
+                                .setRound(homeController.nRound.value),
+                            // 넘버를 표시한다.
+                            Get.back()
+                          }
+                        else
+                          {
+                            Get.snackbar(
+                              "경고",
+                              "중복된 번호가 존재합니다.",
+                              backgroundColor: Colors.redAccent,
+                              snackPosition: SnackPosition.TOP,
+                              forwardAnimationCurve: Curves.elasticInOut,
+                              reverseAnimationCurve: Curves.easeOut,
+                            )
+                          }
+                      },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red,
+                // we can set primary color
+                onPrimary: Colors.black87,
+                // change color of child prop
+                onSurface: Colors.blue,
+                // surface color
+                shadowColor: Colors.grey,
+                minimumSize: Size.fromHeight(70),
+              ),
+              icon: (controller.isProcess.value ||
+                      homeController.isProgress.value)
+                  ? const CircularProgressIndicator()
+                  : const FaIcon(FontAwesomeIcons.inbox),
+              label: const Text(
+                "번호 생성",
+                style: TextStyle(color: Colors.white),
+              )));
+        }),
       ),
     );
   }

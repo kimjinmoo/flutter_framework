@@ -1,11 +1,8 @@
 
-import 'dart:io';
+import 'dart:async';
 
-import 'package:app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 ///
@@ -20,25 +17,45 @@ class QnaWebview extends StatefulWidget {
 }
 class QnaWebviewState extends State<QnaWebview> {
 
+  final Completer<WebViewController> _controller = Completer<WebViewController>();
+  bool isLoading=true;
+
   @override
   void initState() {
     super.initState();
-    if(Platform.isAndroid) WebView.platform = AndroidWebView();
   }
 
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
+          centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.black),
           title:
           const Text("문의하기", style: TextStyle(color: Colors.black)),
           backgroundColor: Colors.transparent,
           elevation: 0.0,
         ),
-        body: SafeArea(child: WebView(
-          javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: 'https://www.grepiu.com/support',
+        body: SafeArea(child: Stack(
+          children: [
+            WebView(
+              zoomEnabled: false,
+              javascriptMode: JavascriptMode.unrestricted,
+              initialUrl: 'https://www.grepiu.com/support',
+              onWebViewCreated: (WebViewController webViewController) {
+                _controller.complete(webViewController);
+              },
+              gestureNavigationEnabled: true,
+              onPageFinished: (finish) {
+                setState(() {
+                  isLoading = false;
+                });
+              },
+            ),
+            isLoading ? Center( child: CircularProgressIndicator(),)
+                : Stack(),
+          ],
         ))
     );
   }

@@ -13,11 +13,12 @@ class MakerController extends GetxController {
   RxList<int> number = [1, 2, 3, 4, 5, 6].obs;
   // 자동 여부 true 자동, false 수동
   RxList<bool> numAutos = [true, true, true, true, true, true].obs;
+  // 생성 카운트
+  RxInt count = 1.obs;
   // 프로세스 여부 true 처리중, false 처리완료
   RxBool isProcess = false.obs;
   // 유효성 여부 false 정상, true 비정상
   RxBool isValid = false.obs;
-
   @override
   void onInit() {
     super.onInit();
@@ -33,6 +34,13 @@ class MakerController extends GetxController {
       checkNumber = minValue;
     }
     number[idx] = checkNumber;
+  }
+
+  ///
+  /// 횟수를 저장한다.
+  ///
+  void onChangeCount(int value) {
+    count.value = value;
   }
 
   ///
@@ -90,27 +98,33 @@ class MakerController extends GetxController {
   Future<void> createNumbers(String userId, int round, List<int> numbers, int count) async {
     isProcess.value = true;
     try {
-      // 번호 가져오기
-      LottoNumberModel model = await fetchWinningLottoNumbers(numbers);
-      if(model.numbers.isNotEmpty) {
-        await addMyLotto(UserLottoModel(
-            userId: userId,
-            round: round,
-            numbers: [
-              MyLottoNumber(
-                  num1: model.numbers[0],
-                  num2: model.numbers[1],
-                  num3: model.numbers[2],
-                  num4: model.numbers[3],
-                  num5: model.numbers[4],
-                  num6: model.numbers[5],
-                  numEx: 0)
-            ],
-            regDate: Timestamp.now())).onError((error, stackTrace) => print(error));
+      for(int index = 0; count > index; index++) {
+        // 번호 가져오기
+        LottoNumberModel model = await fetchWinningLottoNumbers(numbers);
+        if(model.numbers.isNotEmpty) {
+          await addMyLotto(UserLottoModel(
+              userId: userId,
+              round: round,
+              numbers: [
+                MyLottoNumber(
+                    num1: model.numbers[0],
+                    num2: model.numbers[1],
+                    num3: model.numbers[2],
+                    num4: model.numbers[3],
+                    num5: model.numbers[4],
+                    num6: model.numbers[5],
+                    numEx: 0)
+              ],
+              regDate: Timestamp.now())).onError((error, stackTrace) => print(error));
+        }
       }
     } catch(e) {
-      throw Future.error("서버에 문제가 생겼습니다. 관리자에서 문의하여 주십시요");
+      throw Future.error(e.toString());
     } finally {
+      // 초기화
+      number.value = [1, 2, 3, 4, 5, 6];
+      numAutos.value = [true, true, true, true, true, true];
+      this.count.value = 1;
       isProcess.value = false;
     }
   }
