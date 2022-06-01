@@ -100,6 +100,8 @@ class Home extends StatelessWidget {
     return f.format(number);
   }
 
+
+
   @override
   Widget build(context) {
     // 컨트롤러
@@ -107,6 +109,34 @@ class Home extends StatelessWidget {
     final HomeController controller = Get.find();
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
+
+    // 광고 리스터 생성
+    final BannerAdListener listener = BannerAdListener(
+      // Called when an ad is successfully received.
+      onAdLoaded: (Ad ad) => print('Ad loaded.'),
+      // Called when an ad request failed.
+      onAdFailedToLoad: (Ad ad, LoadAdError error) {
+        // Dispose the ad here to free resources
+        ad.dispose();
+        print('Ad failed to load: $error');
+      },
+      // Called when an ad opens an overlay that covers the screen.
+      onAdOpened: (Ad ad) => print('Ad opened.'),
+      // Called when an ad removes an overlay that covers the screen.
+      onAdClosed: (Ad ad) => print('Ad closed.'),
+      // Called when an impression occurs on the ad.
+      onAdImpression: (Ad ad) => print('Ad impression.'),
+    );
+    // Admob 광고
+    BannerAd _bannerAd = BannerAd(
+      adUnitId: 'ca-app-pub-3940256099942544/2934735716',
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: listener,
+    );
+    // 광고 로딩
+    _bannerAd.load();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       // count가 변경 될 때마다 Obx(()=> 를 사용하여 Text()에 업데이트합니다.
@@ -170,13 +200,13 @@ class Home extends StatelessWidget {
       ),
       // 8줄의 Navigator.push를 간단한 Get.to()로 변경합니다. context는 필요없습니다.
       body: Obx(() => authController.user.value.isLogin
-          ? list(context, authController, controller)
+          ? list(context, authController, controller, _bannerAd)
           : SizedBox()),
     );
   }
 
   Widget list(context,
-      AuthController authController, HomeController controller) {
+      AuthController authController, HomeController controller, BannerAd bannerAd) {
     return controller.isProgress.value
         ? Shimmer.fromColors(
             baseColor: Colors.grey.shade300,
@@ -391,19 +421,16 @@ class Home extends StatelessWidget {
                             )),
                         height: 40,
                       )),
-                  Obx(() => controller.winningNumberInfo.value != null
-                      ? IconButton(
-                          onPressed: controller.isProgress.value
+                  Obx(() =>
+                      IconButton(
+                          onPressed: (controller.isProgress.value || controller.winningNumberInfo.value == null)
                               ? null
                               : () {
-                                  controller.toNextRound().onError(
-                                      (error, stackTrace) =>
-                                          HapticFeedback.heavyImpact());
-                                },
-                          icon: const FaIcon(FontAwesomeIcons.angleRight))
-                      : const IconButton(
-                          onPressed: null,
-                          icon: FaIcon(FontAwesomeIcons.angleRight)))
+                            controller.toNextRound().onError(
+                                    (error, stackTrace) =>
+                                    HapticFeedback.heavyImpact());
+                          },
+                          icon: const FaIcon(FontAwesomeIcons.angleRight)))
                 ],
               ),
               // Container(
@@ -467,10 +494,10 @@ class Home extends StatelessWidget {
               ),
               Container(
                 alignment: Alignment.center,
-                height: controller.banner.size.height.toDouble(),
-                width: controller.banner.size.width.toDouble(),
+                height: bannerAd.size.height.toDouble(),
+                width: bannerAd.size.width.toDouble(),
                 color: Colors.grey.shade300,
-                child: AdWidget(ad: controller.banner),
+                child: AdWidget(ad: bannerAd),
               ),
               // Container(
               //   alignment: Alignment.topLeft,

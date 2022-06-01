@@ -3,6 +3,7 @@ import 'package:app/pages/main/presentation/controllers/maker_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 ///
 /// 로또번호를 생성한다.
@@ -34,7 +35,10 @@ class Maker extends GetView<MakerController> {
           controller.count.value == i)));
     }
 
-    // 시넥바 성공메세지
+    // 번호 뽑기 로직 링크
+    final Uri _url = Uri.parse('https://flutter.dev');
+
+    // 스넥바 성공메세지
     final sucessMsg = SnackBar(
       backgroundColor: Colors.red,
       content: const Text('번호가 생성되였습니다.')
@@ -58,7 +62,12 @@ class Maker extends GetView<MakerController> {
                       child: Text("번호생성 안내",style: TextStyle(color: Colors.black),),
                     ),
                   ],
-                  onSelected: (item) async => {
+                  onSelected: (item) async {
+                    switch(item){
+                      case 0:
+                          if(!await launchUrl(_url)) throw '실행할수 없는 URL 입니다.';
+                        break;
+                    }
                   },
               ),
             ],

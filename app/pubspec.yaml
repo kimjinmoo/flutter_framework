@@ -37,12 +37,12 @@ dependencies:
   get: ^4.6.5
   font_awesome_flutter: ^10.1.0
   shared_preferences: ^2.0.15
-  google_fonts: ^2.3.2
+  google_fonts: ^3.0.1
   cached_network_image: ^3.2.1
   http: ^0.13.4
   flutter_dotenv: ^5.0.2
   badges: ^2.0.2
-  flutter_native_splash: ^2.2.1
+  flutter_native_splash: ^2.2.2
   firebase_core: ^1.17.1
   cloud_firestore: ^3.1.17
   firebase_analytics: ^9.1.9
@@ -51,8 +51,8 @@ dependencies:
   webview_flutter: ^3.0.4
   intl: ^0.17.0
   google_mobile_ads: ^1.2.0
-  url_launcher: ^6.1.2
   shimmer: ^2.0.0
+  url_launcher: ^6.1.2
 
 dev_dependencies:
   flutter_test:

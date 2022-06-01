@@ -48,38 +48,13 @@ class HomeController extends GetxController {
     userId: ""
   ));
 
-  // 배너
-  late BannerAd _bannerAd;
+
 
   @override
   void onInit() async {
     super.onInit();
-    // 광고 리스터 생성
-    final BannerAdListener listener = BannerAdListener(
-      // Called when an ad is successfully received.
-      onAdLoaded: (Ad ad) => print('Ad loaded.'),
-      // Called when an ad request failed.
-      onAdFailedToLoad: (Ad ad, LoadAdError error) {
-        // Dispose the ad here to free resources.
-        ad.dispose();
-        print('Ad failed to load: $error');
-      },
-      // Called when an ad opens an overlay that covers the screen.
-      onAdOpened: (Ad ad) => print('Ad opened.'),
-      // Called when an ad removes an overlay that covers the screen.
-      onAdClosed: (Ad ad) => print('Ad closed.'),
-      // Called when an impression occurs on the ad.
-      onAdImpression: (Ad ad) => print('Ad impression.'),
-    );
-    // 광고
-    _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-3940256099942544/2934735716',
-      size: AdSize.banner,
-      request: const AdRequest(),
-      listener: listener,
-    );
-    // 광고 로딩
-    _bannerAd.load();
+    // 로딩 시작
+    isProgress.value = true;
     // 현재 라운드 초기화
     await fetchCurrentRoundInit().onError((error, stackTrace) => {
           Get.snackbar("경고", "서버에 문제가 발생하였습니다. 잠시후 다시 실행하여 주세요!!"),
@@ -97,17 +72,17 @@ class HomeController extends GetxController {
     commentController.addListener(() {
       comment.value = commentController.text;
     });
+    // 최종 프로그레스 false 처리
+    if(isProgress.value) {
+      isProgress.value = false;
+    }
   }
 
   @override
   void onClose() {
     super.onClose();
     commentController.dispose();
-    _bannerAd.dispose();
   }
-
-  // 배너 상태를 가져온다.
-  BannerAd get banner => _bannerAd;
 
   /// 현재 라운드를 초기화한다.
   Future<void> fetchCurrentRoundInit() async {

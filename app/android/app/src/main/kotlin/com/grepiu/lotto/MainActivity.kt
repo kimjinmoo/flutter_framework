@@ -1,4 +1,4 @@
-package com.grepiu.app
+package com.grepiu.lotto
 
 import io.flutter.embedding.android.FlutterActivity
 
