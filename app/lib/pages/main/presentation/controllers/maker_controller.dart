@@ -1,5 +1,6 @@
-import 'package:app/pages/home/domain/entity/lotto_number_model.dart';
-import 'package:app/pages/home/domain/entity/user_lotto_model.dart';
+import 'package:app/pages/accoount/controllers/auth_controller.dart';
+import 'package:app/pages/main/domain/entity/lotto_number_model.dart';
+import 'package:app/pages/main/domain/entity/user_lotto_model.dart';
 import 'package:app/services/api_service.dart';
 import 'package:app/services/firebase_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,31 +10,31 @@ import 'package:get/get.dart';
 /// 번호 생성 컨트롤러
 ///
 class MakerController extends GetxController {
+  AuthController authController = Get.find();
   // 번호
-  RxList<int> number = [1, 2, 3, 4, 5, 6].obs;
-  // 자동 여부 true 자동, false 수동
-  RxList<bool> numAutos = [true, true, true, true, true, true].obs;
+  RxSet<int> number = <int>{}.obs;
   // 생성 카운트
   RxInt count = 1.obs;
   // 프로세스 여부 true 처리중, false 처리완료
   RxBool isProcess = false.obs;
-  // 유효성 여부 false 정상, true 비정상
-  RxBool isValid = false.obs;
+
   @override
   void onInit() {
     super.onInit();
   }
 
   ///
-  /// 수동입력번호를 선택한다.
+  /// 탭이벤트 처리
   ///
-  void onChangeValue(int idx, int num, int minValue, int maxValue) {
-    int checkNumber = num;
-    // 최대값을 초과 하면 최소값으로 변경한다.
-    if (checkNumber > maxValue) {
-      checkNumber = minValue;
+  void onTapNumber(int number) {
+    if(this.number.contains(number)) {
+      this.number.value.remove(number);
+    } else {
+      if(this.number.value.length < 6) {
+        this.number.value.add(number);
+      }
     }
-    number[idx] = checkNumber;
+    this.number.refresh();
   }
 
   ///
@@ -43,38 +44,8 @@ class MakerController extends GetxController {
     count.value = value;
   }
 
-  ///
-  /// 중복된 번호를 체크한다.
-  ///
-  void onCheckLottoNumber() {
-    var data = Set();
-    int real = 0;
-    for (var idx = 0; idx < numAutos.value.length; idx++) {
-      print(numAutos.value[idx]);
-      if(!numAutos.value[idx]) {
-        real++;
-        data.add(number.value[idx]);
-      }
-    }
-    if(real == data.length) {
-      isValid.value = true;
-    } else {
-      isValid.value = false;
-    }
-  }
-
-  ///
-  /// 자동/수동 상태를 저장한다.
-  ///
-  void onChange(int idx, bool isChecked) {
-    numAutos[idx] = isChecked;
-  }
-
   void checkTime() {
     final now = DateTime.now(); //반드시 다른 함수에서 해야함, Mypage같은 클래스에서는 사용 불가능
-    print(" now.weekday : ${now.weekday}");
-    print(" now.weekday : ${now.hour}");
-    print(" now.weekday : ${now.minute}");
     final testDay = DateTime(now.year, now.month, now.day, 20, 30);
     final startDay = DateTime(now.year, now.month, now.day, 20, 30);
     final stopDay = DateTime(now.year, now.month, now.day, 20, 45);
@@ -95,7 +66,7 @@ class MakerController extends GetxController {
   /// [numbers] 수동값이 필요하다면 값을 배열로 넣는다. ex [1,2,3]
   /// [count]는 회수를 입력한다.
   /// 리턴값은 void이다.
-  Future<void> createNumbers(String userId, int round, List<int> numbers, int count) async {
+  Future<void> createNumbers(int round, List<int> numbers, int count) async {
     isProcess.value = true;
     try {
       for(int index = 0; count > index; index++) {
@@ -103,7 +74,7 @@ class MakerController extends GetxController {
         LottoNumberModel model = await fetchWinningLottoNumbers(numbers);
         if(model.numbers.isNotEmpty) {
           await addMyLotto(UserLottoModel(
-              userId: userId,
+              userId: authController.user.value.userId,
               round: round,
               numbers: [
                 MyLottoNumber(
@@ -122,23 +93,41 @@ class MakerController extends GetxController {
       throw Future.error(e.toString());
     } finally {
       // 초기화
-      number.value = [1, 2, 3, 4, 5, 6];
-      numAutos.value = [true, true, true, true, true, true];
+      number.value = {};
       this.count.value = 1;
       isProcess.value = false;
     }
   }
 
+  /// 선택 클리어
+  void clear() {
+    // 초기화
+    number.value = {};
+  }
   ///
   /// 수동으로 선택한 번호를 리턴한다.
   ///
   List<int> getValues() {
     List<int> values = [];
-    for (int idx = 0; idx < numAutos.length; idx++) {
-      if (!numAutos[idx]) {
-        values.add(number[idx]);
-      }
+
+    for (int idx = 0; idx < number.value.length; idx++) {
+      values.add(number.value.elementAt(idx));
     }
+    // 정렬
+    values.sort();
     return values;
+  }
+
+  ///
+  /// 현재 뽑기 모드
+  ///
+  String getMode() {
+    if(number.length > 0 && number.length < 6) {
+      return "수동+자동";
+    }
+    if(number.length == 6) {
+      return "수동";
+    }
+    return "자동";
   }
 }

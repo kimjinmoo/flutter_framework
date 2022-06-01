@@ -11,7 +11,8 @@ class UserModel {
   UserModel({
     required this.userId,
     required this.userName,
-    required this.regDate
+    required this.regDate,
+    isLogin
   });
 
   // 유저 ID
@@ -20,6 +21,8 @@ class UserModel {
   final String userName;
   // 등록일
   final Timestamp regDate;
+
+  bool isLogin = false;
 
   // Redirecting 생성자를 통해 생성
   UserModel.fromJson(Map<String, Object?> json)

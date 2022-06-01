@@ -2,8 +2,10 @@ part of 'app_pages.dart';
 
 abstract class Routes {
   // 홈
-  static const HOME = '/home';
-  static const HOME_MAKER = "/maker";
+  static const MAIN = "/";
+  static const MAIN_MAKER = "/maker";
+
+  static const HOME = "/home";
   static const HOME_WEEK = "/week";
 
   // side 메뉴

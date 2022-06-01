@@ -45,6 +45,12 @@ class WinningNumber {
     return "${this.num1.toString().padLeft(2, '0')} ${this.num2.toString().padLeft(2, '0')} ${this.num3.toString().padLeft(2, '0')} ${this.num4.toString().padLeft(2, '0')} ${this.num5.toString().padLeft(2, '0')} ${this.num6.toString().padLeft(2, '0')} + ${this.numEx.toString().padLeft(2, '0')}";
   }
 
+  List<int> toArrayNumber() {
+    return [
+      num1,num2,num3,num4,num5,num6
+    ];
+  }
+
   List<int> getPrice() {
     return [
       rank1pay,rank2pay,rank3pay,rank4pay,rank5pay

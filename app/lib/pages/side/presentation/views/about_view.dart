@@ -7,9 +7,12 @@ class About extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          centerTitle: true,
-          title: const Text("이프로그램은..."),
-        ),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: const Text("이프로그램은....", style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0
+    ),
         body: const Center(child: Text("oops"))
     );
   }

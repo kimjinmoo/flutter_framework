@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:app/pages/home/domain/entity/commands_model.dart';
-import 'package:app/pages/home/domain/entity/user_lotto_model.dart';
-import 'package:app/pages/home/domain/entity/user_model.dart';
+import 'package:app/pages/main/domain/entity/commands_model.dart';
+import 'package:app/pages/main/domain/entity/user_lotto_model.dart';
+import 'package:app/pages/main/domain/entity/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // 파이어베이스
@@ -104,11 +104,19 @@ Future<void> addUser(UserModel userModel) async {
 
 /// 내 추천점호를 가져온다.
 Future<UserLottoModel> fetchMyLotto(int round, String userId) async {
+  print(round);
+  print(userId);
   QuerySnapshot<UserLottoModel> querySnapshot = await userLottoRef.where("round", isEqualTo: round).where("userId", isEqualTo: userId).get();
   if(querySnapshot.docs.isNotEmpty) {
+    print("is exsist");
     return querySnapshot.docs.first.data();
   }
-  return UserLottoModel(userId: userId, round: round, numbers: const [], regDate: Timestamp.now());
+  return UserLottoModel(
+      numbers: [],
+      round: 0,
+      regDate: Timestamp.now(),
+      userId: ""
+  );
 }
 
 ///

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:app/pages/home/domain/entity/lotto_number_model.dart';
-import 'package:app/pages/home/domain/entity/winning_number.dart';
+import 'package:app/pages/main/domain/entity/lotto_number_model.dart';
+import 'package:app/pages/main/domain/entity/winning_number.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,6 +28,7 @@ Future<LottoNumberModel> fetchWinningLottoNumbers(List<int> numbers) async {
           'Error', 408); // Request Timeout response status code
     },
   );
+  print(response.body);
   if (response.statusCode == 200) {
     List<List<dynamic>> list =
         List.from(List<dynamic>.from(json.decode(response.body)));
@@ -62,7 +63,7 @@ Future fetchAILotto() async {
 ///
 /// 로또 당첨 번호 히스토리 가져오기
 ///
-Future<WinningNumber> fetchLottoWinningHistory(int? round) async {
+Future<WinningNumber?> fetchLottoWinningHistory(int? round) async {
   Uri url;
   if (round == null) {
     url = Uri.parse('${dotenv.env['API_URL']}/history');
@@ -81,5 +82,5 @@ Future<WinningNumber> fetchLottoWinningHistory(int? round) async {
     // result
     return WinningNumber.fromJson(obj[0]);
   }
-  return Future.error("100-서버에 문제가 생겼습니다. 관리자에서 문의하여 주십시요");
+  return null;
 }
