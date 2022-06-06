@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
+import 'package:lotto/utils/validation_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 // 홈
@@ -60,8 +61,13 @@ class Home extends StatelessWidget {
                                   ? null
                                   : InkWell(
                                       onTap: () => {
-                                        controller.addComment(),
-                                        Navigator.pop(context)
+                                        if(!isBlackListCheck(controller.commentController.text)) {
+                                          controller.addComment(),
+                                          Get.back()
+                                        } else {
+                                          HapticFeedback.heavyImpact(),
+                                          Get.snackbar("경고", "사용할수 없는 단어가 포함되어 있습니다.")
+                                        }
                                       },
                                       child: const FaIcon(
                                         FontAwesomeIcons.pencil,
@@ -113,12 +119,12 @@ class Home extends StatelessWidget {
     // 광고 리스터 생성
     final BannerAdListener listener = BannerAdListener(
       // Called when an ad is successfully received.
-      onAdLoaded: (Ad ad) => print('Ad loaded.'),
+      onAdLoaded: (Ad ad) => controller.setIsAdError(false),
       // Called when an ad request failed.
       onAdFailedToLoad: (Ad ad, LoadAdError error) {
         // Dispose the ad here to free resources
         ad.dispose();
-        print('Ad failed to load: $error');
+        controller.setIsAdError(true);
       },
       // Called when an ad opens an overlay that covers the screen.
       onAdOpened: (Ad ad) => print('Ad opened.'),
@@ -496,14 +502,16 @@ class Home extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.only(top: 5, bottom: 5),
-                alignment: Alignment.center,
-                height: bannerAd.size.height.toDouble(),
-                width: bannerAd.size.width.toDouble(),
-                color: Colors.grey.shade300,
-                child: AdWidget(ad: bannerAd),
-              ),
+              Obx(() => controller.isAdError.value
+                  ? SizedBox()
+                  : Container(
+                      padding: EdgeInsets.only(top: 5, bottom: 5),
+                      alignment: Alignment.center,
+                      height: bannerAd.size.height.toDouble(),
+                      width: bannerAd.size.width.toDouble(),
+                      color: Colors.grey.shade300,
+                      child: AdWidget(ad: bannerAd),
+                    )),
               const SizedBox(
                 height: 10,
               ),

@@ -28,7 +28,6 @@ Future<LottoNumberModel> fetchWinningLottoNumbers(List<int> numbers) async {
           'Error', 408); // Request Timeout response status code
     },
   );
-  print(response.body);
   if (response.statusCode == 200) {
     List<List<dynamic>> list =
         List.from(List<dynamic>.from(json.decode(response.body)));

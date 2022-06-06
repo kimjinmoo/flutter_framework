@@ -23,6 +23,7 @@ class HomeController extends GetxController {
 
   // 프로그레스 true : 처리중, false : 처리완료
   RxBool isProgress = false.obs;
+  RxBool isAdError = false.obs;
 
   // 코맨트 컨트럴
   final commentFormKey = GlobalKey<FormState>();
@@ -43,6 +44,9 @@ class HomeController extends GetxController {
   // 현재 진행중인 회차
   RxInt nextRound = 0.obs;
 
+  // 임시 라운드 코드
+  RxInt tempRoundCode = 1.obs;
+
   // error 여부 true: 에러, false: 정상
   RxBool isError = false.obs;
 
@@ -56,16 +60,30 @@ class HomeController extends GetxController {
     // 로딩 시작
     isProgress.value = true;
     // 현재 라운드 초기화
-    await fetchCurrentRoundInit().timeout(Duration(seconds: 5)).onError((error, stackTrace) => {
-          Get.snackbar("경고", "서버에 문제가 발생하였습니다. 잠시후 다시 실행하여 주세요!!"),
-          Timer(const Duration(seconds: 10), () {
-            if (Platform.isAndroid) {
-              SystemNavigator.pop();
-            } else if (Platform.isIOS) {
-              exit(0);
-            }
-          })
-        });
+    await fetchCurrentRoundInit()
+        .timeout(Duration(seconds: 5))
+        .onError((error, stackTrace) => {
+              AlertDialog(
+                title: Text("서버에 문제가 발생하였습니다."),
+                content: Text("서버에 문제가 발생하였습니다. 잠시후 다시 실행하여 주십시요."),
+                actions: [
+                  ElevatedButton.icon(
+                    label: Text("확인"),
+                    onPressed: () async {
+                      if (Platform.isAndroid) {
+                        SystemNavigator.pop();
+                      } else if (Platform.isIOS) {
+                        exit(0);
+                      }
+                    },
+                    icon: Icon(
+                      Icons.check,
+                      size: 15,
+                    ),
+                  )
+                ],
+              )
+            });
     // 최신 횟차로 초기화
     await toNextRound();
     // 댓글 업데이트
@@ -74,7 +92,6 @@ class HomeController extends GetxController {
     });
     // 최종 프로그레스 false 처리
     if (isProgress.value) {
-      print("success");
       isProgress.value = false;
     }
   }
@@ -91,6 +108,7 @@ class HomeController extends GetxController {
     WinningNumber? winningNumber = await fetchLottoWinningHistory(null)
         .timeout(const Duration(seconds: 10))
         .catchError((onError) {
+      print(onError.toString());
       // 에러 체크
       isError.value = true;
       throw Future.error("101 - 서버에 오류가 발생하였습니다.");
@@ -157,6 +175,23 @@ class HomeController extends GetxController {
     // 히스토리 가져오기
     await fetchMyCurrentRoundLottoHistory();
     isProgress.value = false;
+  }
+
+  ///
+  /// 임시 번호 라운드 초기화
+  ///
+  void initTempRound() {
+    tempRoundCode.value = currentRound.value;
+  }
+
+  /// 임시 번호 라운드 값 설정
+  void setTempRound(int round) {
+    tempRoundCode.value = round;
+  }
+
+  // 광고 에러 여부
+  void setIsAdError(bool isError) {
+    isAdError.value = isError;
   }
 
   // 코맨트 글을 클리어한다.

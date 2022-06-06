@@ -1,5 +1,6 @@
 import 'package:lotto/pages/home/presentation/controllers/home_controller.dart';
 import 'package:lotto/pages/home/presentation/controllers/landing_controller.dart';
+import 'package:lotto/pages/info/presentation/views/info_view.dart';
 import 'package:lotto/pages/maker/presentation/controllers/maker_controller.dart';
 import 'package:lotto/pages/home/presentation/views/home_view.dart';
 import 'package:lotto/pages/maker/presentation/views/maker_view.dart';
@@ -89,11 +90,11 @@ class LandingView extends GetView<LandingController> {
           icon: Container(
             margin: EdgeInsets.only(bottom: 7),
             child: Icon(
-              Icons.bar_chart,
+              Icons.file_open,
               size: 20.0,
             ),
           ),
-          label: '통계',
+          label: '정보',
         ),
         BottomNavigationBarItem(
           icon: Container(
@@ -122,7 +123,7 @@ class LandingView extends GetView<LandingController> {
         body: Obx(
           () => IndexedStack(
             index: controller.tabIndex.value,
-            children: [Home(), History(), Maker(), LottoStatisticsWebview(), Setting()],
+            children: [Home(), History(), Maker(), Info(), Setting()],
           ),
         ));
   }

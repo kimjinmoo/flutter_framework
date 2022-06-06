@@ -3,6 +3,7 @@ import 'package:lotto/pages/setting/presentation/controllers/setting_controller.
 import 'package:lotto/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Setting extends GetView<SettingController> {
   @override
@@ -56,7 +57,7 @@ class Setting extends GetView<SettingController> {
                 children: [
                   Container(
                     child: TextButton(onPressed: (){
-                      Get.toNamed("${Routes.SIDE}${Routes.SIDE_QNA}");
+                      Get.toNamed(Routes.SIDE_QNA);
                     }, child: Container(
                       width: double.infinity,
                       child: Row(
@@ -76,13 +77,14 @@ class Setting extends GetView<SettingController> {
                   Divider(height: 10),
                   Container(
                     child:
-                    TextButton(onPressed: (){
-                      Get.toNamed("${Routes.SIDE}${Routes.SIDE_ABOUT}");
+                    TextButton(onPressed: () async {
+                      // 번호 뽑기 로직 링크
+                      if(!await launchUrl(Uri.parse('https://www.grepiu.com/toy/lotto/about?offNav=off'))) throw '실행할수 없는 URL 입니다.';
                     }, child: Container(
                       width: double.infinity,
                       child: Row(
                         children: [
-                          Text("이프로그램은...", style: TextStyle(color: Colors.black)),
+                          Text("Opensource License", style: TextStyle(color: Colors.black)),
                           Expanded(
                               flex: 1,
                               child: Align(

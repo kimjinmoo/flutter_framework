@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -8,17 +5,17 @@ import 'package:webview_flutter/webview_flutter.dart';
 ///
 /// 웹뷰
 ///
-class LottoStatisticsWebview extends StatefulWidget {
+class LottoTotalStatisticsWebview extends StatefulWidget {
   @override
-  LottoStatisticsWebviewState createState() {
-    return LottoStatisticsWebviewState();
+  LottoTotalStatisticsWebviewState createState() {
+    return LottoTotalStatisticsWebviewState();
   }
 }
 
 ///
 /// 통계 보기
 ///
-class LottoStatisticsWebviewState extends State<LottoStatisticsWebview> {
+class LottoTotalStatisticsWebviewState extends State<LottoTotalStatisticsWebview> {
   late WebViewController _webViewController;
 
   bool isLoading = true;
@@ -35,7 +32,7 @@ class LottoStatisticsWebviewState extends State<LottoStatisticsWebview> {
         appBar: AppBar(
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.black),
-          title: const Text("회차 별 통계", style: TextStyle(color: Colors.black)),
+          title: const Text("총 번호", style: TextStyle(color: Colors.black)),
           backgroundColor: Colors.transparent,
           elevation: 0.0,
         ),
@@ -48,7 +45,7 @@ class LottoStatisticsWebviewState extends State<LottoStatisticsWebview> {
                       _webViewController = webViewController;
                     },
                     javascriptMode: JavascriptMode.unrestricted,
-                    initialUrl: 'https://www.grepiu.com/toy/lotto/statistics?offNav=off',
+                    initialUrl: 'https://www.grepiu.com/toy/lotto/total-statistics?offNav=off',
                     onPageFinished: (finish) {
                       _webViewController.runJavascript('document.body.style.overflow = \'hidden\';');
                       setState(() {
