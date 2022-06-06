@@ -1,6 +1,6 @@
-import 'package:app/pages/home/domain/rank.dart';
-import 'package:app/pages/home/presentation/controllers/home_controller.dart';
-import 'package:app/pages/maker/presentation/controllers/maker_controller.dart';
+import 'package:lotto/pages/home/domain/rank.dart';
+import 'package:lotto/pages/home/presentation/controllers/home_controller.dart';
+import 'package:lotto/pages/maker/presentation/controllers/maker_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,7 +20,7 @@ class History extends GetView {
         appBar: AppBar(
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.black),
-          title: Text("내 번호 - ${controller.currentRound}회차",
+          title: Text("${controller.currentRound}회차",
               style: TextStyle(color: Colors.black)),
           backgroundColor: Colors.transparent,
           elevation: 0.0,
@@ -36,7 +36,34 @@ class History extends GetView {
                   ),
                 ),
               ],
-              onSelected: (item) => {print(item)},
+              onSelected: (item) {
+                switch(item) {
+                  case 0:
+                    Scaffold.of(context).showBottomSheet<void>(
+                          (BuildContext context) {
+                        return Container(
+                          height: 200,
+                          color: Colors.amber,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                const Text('BottomSheet'),
+                                ElevatedButton(
+                                    child: const Text('Close BottomSheet'),
+                                    onPressed: () {
+                                      Get.back();
+                                    })
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                    break;
+                }
+              },
             ),
           ],
         ),

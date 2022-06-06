@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:app/pages/home/domain/entity/winning_number.dart';
-import 'package:app/pages/maker/domain/entity/lotto_number_model.dart';
+import 'package:lotto/pages/home/domain/entity/winning_number.dart';
+import 'package:lotto/pages/maker/domain/entity/lotto_number_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 

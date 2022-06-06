@@ -1,8 +1,8 @@
-import 'package:app/pages/account/presentation/controllers/auth_controller.dart';
-import 'package:app/pages/maker/domain/entity/lotto_number_model.dart';
-import 'package:app/pages/home/domain/entity/user_lotto_model.dart';
-import 'package:app/services/api_service.dart';
-import 'package:app/services/firebase_service.dart';
+import 'package:lotto/pages/account/presentation/controllers/auth_controller.dart';
+import 'package:lotto/pages/maker/domain/entity/lotto_number_model.dart';
+import 'package:lotto/pages/home/domain/entity/user_lotto_model.dart';
+import 'package:lotto/services/api_service.dart';
+import 'package:lotto/services/firebase_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 

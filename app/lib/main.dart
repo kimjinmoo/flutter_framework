@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:app/constants/Environment.dart';
-import 'package:app/firebase_options.dart';
-import 'package:app/pages/account/presentation/controllers/auth_controller.dart';
-import 'package:app/pages/home/presentation/controllers/home_controller.dart';
-import 'package:app/pages/home/presentation/controllers/landing_controller.dart';
-import 'package:app/pages/maker/presentation/controllers/maker_controller.dart';
-import 'package:app/pages/setting/presentation/controllers/setting_controller.dart';
-import 'package:app/routes/app_pages.dart';
+import 'package:lotto/constants/Environment.dart';
+import 'package:lotto/firebase_options.dart';
+import 'package:lotto/pages/account/presentation/controllers/auth_controller.dart';
+import 'package:lotto/pages/home/presentation/controllers/home_controller.dart';
+import 'package:lotto/pages/home/presentation/controllers/landing_controller.dart';
+import 'package:lotto/pages/maker/presentation/controllers/maker_controller.dart';
+import 'package:lotto/pages/setting/presentation/controllers/setting_controller.dart';
+import 'package:lotto/routes/app_pages.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';

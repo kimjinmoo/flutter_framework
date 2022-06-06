@@ -1,6 +1,6 @@
-import 'package:app/pages/account/presentation/controllers/auth_controller.dart';
-import 'package:app/pages/setting/presentation/controllers/setting_controller.dart';
-import 'package:app/routes/app_pages.dart';
+import 'package:lotto/pages/account/presentation/controllers/auth_controller.dart';
+import 'package:lotto/pages/setting/presentation/controllers/setting_controller.dart';
+import 'package:lotto/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

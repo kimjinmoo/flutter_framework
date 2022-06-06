@@ -1,9 +1,9 @@
-import 'package:app/pages/account/presentation/controllers/auth_controller.dart';
-import 'package:app/pages/home/domain/entity/commands_model.dart';
-import 'package:app/pages/home/presentation/controllers/home_controller.dart';
-import 'package:app/services/firebase_service.dart';
-import 'package:app/utils/ad_utils.dart';
-import 'package:app/utils/time_utils.dart';
+import 'package:lotto/pages/account/presentation/controllers/auth_controller.dart';
+import 'package:lotto/pages/home/domain/entity/commands_model.dart';
+import 'package:lotto/pages/home/presentation/controllers/home_controller.dart';
+import 'package:lotto/services/firebase_service.dart';
+import 'package:lotto/utils/ad_utils.dart';
+import 'package:lotto/utils/time_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:app/pages/home/domain/entity/commands_model.dart';
-import 'package:app/pages/home/domain/entity/user_lotto_model.dart';
-import 'package:app/pages/account/domain/entity/user_model.dart';
+import 'package:lotto/pages/home/domain/entity/commands_model.dart';
+import 'package:lotto/pages/home/domain/entity/user_lotto_model.dart';
+import 'package:lotto/pages/account/domain/entity/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // 파이어베이스

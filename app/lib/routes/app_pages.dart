@@ -1,10 +1,9 @@
-import 'package:app/pages/home/presentation/views/home_view.dart';
-import 'package:app/pages/home/presentation/views/landing_view.dart';
-import 'package:app/pages/home/presentation/views/qr_view.dart';
-import 'package:app/pages/info/presentation/views/status_view.dart';
-import 'package:app/pages/setting/presentation/views/about_view.dart';
-import 'package:app/pages/setting/presentation/views/account_setting_view.dart';
-import 'package:app/pages/setting/presentation/views/qna_view.dart';
+import 'package:lotto/pages/home/presentation/views/home_view.dart';
+import 'package:lotto/pages/home/presentation/views/landing_view.dart';
+import 'package:lotto/pages/info/presentation/views/status_view.dart';
+import 'package:lotto/pages/setting/presentation/views/about_view.dart';
+import 'package:lotto/pages/setting/presentation/views/account_setting_view.dart';
+import 'package:lotto/pages/setting/presentation/views/qna_view.dart';
 import 'package:get/get.dart';
 
 part './app_routes.dart';
@@ -20,10 +19,6 @@ class AppPages {
     GetPage(
       name: Routes.HOME,
       page: () => Home()
-    ),
-    GetPage(
-        name: Routes.QR,
-        page: () => QrCordReader()
     ),
     GetPage(name: Routes.ACCOUNT, page: ()=>AccountSetting(), transition: Transition.rightToLeft),
     GetPage(

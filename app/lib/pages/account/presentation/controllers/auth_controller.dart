@@ -1,8 +1,8 @@
-import 'package:app/pages/account/domain/entity/user_model.dart';
-import 'package:app/services/firebase_service.dart';
-import 'package:app/utils/random_nickname_makers.dart';
-import 'package:app/utils/share_utils.dart';
-import 'package:app/utils/time_utils.dart';
+import 'package:lotto/pages/account/domain/entity/user_model.dart';
+import 'package:lotto/services/firebase_service.dart';
+import 'package:lotto/utils/random_nickname_makers.dart';
+import 'package:lotto/utils/share_utils.dart';
+import 'package:lotto/utils/time_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
