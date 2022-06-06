@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:app/constants/Environment.dart';
 import 'package:app/firebase_options.dart';
-import 'package:app/pages/accoount/controllers/auth_controller.dart';
-import 'package:app/pages/main/presentation/controllers/home_controller.dart';
-import 'package:app/pages/main/presentation/controllers/landing_controller.dart';
-import 'package:app/pages/main/presentation/controllers/maker_controller.dart';
+import 'package:app/pages/account/presentation/controllers/auth_controller.dart';
+import 'package:app/pages/home/presentation/controllers/home_controller.dart';
+import 'package:app/pages/home/presentation/controllers/landing_controller.dart';
+import 'package:app/pages/maker/presentation/controllers/maker_controller.dart';
+import 'package:app/pages/setting/presentation/controllers/setting_controller.dart';
 import 'package:app/routes/app_pages.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -33,6 +35,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // 구글 크래쉬 적용
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
   // 웹뷰 초기화
   if(Platform.isAndroid) WebView.platform = AndroidWebView();
 
@@ -60,10 +65,11 @@ void main() async {
 /// Get 컨트롤러 주입
 ///
 void initialize() {
-  // inject authentication controller
+  // 컨트롤러 주입
   Get.lazyPut(() => AuthController());
   Get.lazyPut(() => HomeController());
   Get.lazyPut(() => LandingController());
   Get.lazyPut(()=> MakerController());
+  Get.lazyPut(() => SettingController());
 }
 

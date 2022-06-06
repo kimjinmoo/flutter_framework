@@ -1,17 +1,17 @@
 part of 'app_pages.dart';
 
 abstract class Routes {
-  // 홈
+  // 메인
   static const MAIN = "/";
-  static const MAIN_MAKER = "/maker";
-
+  static const MAKER = "/maker";
   static const HOME = "/home";
-  static const HOME_WEEK = "/week";
+  static const QR = "/qr";
+  static const SETTING = "/setting";
+  static const STATUS = "/status";
+  static const ACCOUNT = "/account";
 
   // side 메뉴
   static const SIDE = "/side-menu";
-  static const SIDE_SETTING = "/setting";
-  static const SIDE_STATUS = "/status";
   static const SIDE_QNA = "/qna";
   static const SIDE_ABOUT = "/about";
 }

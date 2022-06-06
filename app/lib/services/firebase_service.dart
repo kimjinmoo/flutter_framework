@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:app/pages/main/domain/entity/commands_model.dart';
-import 'package:app/pages/main/domain/entity/user_lotto_model.dart';
-import 'package:app/pages/main/domain/entity/user_model.dart';
+import 'package:app/pages/home/domain/entity/commands_model.dart';
+import 'package:app/pages/home/domain/entity/user_lotto_model.dart';
+import 'package:app/pages/account/domain/entity/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // 파이어베이스
@@ -104,11 +104,8 @@ Future<void> addUser(UserModel userModel) async {
 
 /// 내 추천점호를 가져온다.
 Future<UserLottoModel> fetchMyLotto(int round, String userId) async {
-  print(round);
-  print(userId);
   QuerySnapshot<UserLottoModel> querySnapshot = await userLottoRef.where("round", isEqualTo: round).where("userId", isEqualTo: userId).get();
   if(querySnapshot.docs.isNotEmpty) {
-    print("is exsist");
     return querySnapshot.docs.first.data();
   }
   return UserLottoModel(
@@ -117,6 +114,23 @@ Future<UserLottoModel> fetchMyLotto(int round, String userId) async {
       regDate: Timestamp.now(),
       userId: ""
   );
+}
+
+/// 내 추첨번호를 제거한다.
+Future<void> deleteMyLotto(int round, String userId, int removeIndex) async {
+  QuerySnapshot<UserLottoModel> querySnapshot = await userLottoRef.where("round", isEqualTo: round).where("userId", isEqualTo: userId).get();
+  if(querySnapshot.docs.isNotEmpty) {
+    var id = querySnapshot.docs[0].reference.id;
+    print(id);
+    List<MyLottoNumber> numbers = querySnapshot.docs[0].data().numbers;
+    print(numbers.length);
+    if(!numbers.isEmpty) {
+      // 데이터를 삭제한다.
+      numbers.removeAt(removeIndex);
+      // 데이터를 업데이트 한다.
+      userLottoRef.doc(id).update({'numbers': numbers.map((e)=>e.toJson()).toList()});
+    }
+  }
 }
 
 ///
@@ -141,7 +155,6 @@ Future<void> addMyLotto(UserLottoModel userLottoModel) async {
       userLottoRef.doc(id).update({'numbers': numbers.map((e) => e.toJson()).toList()});
     }
   } else {
-    print("add!!");
     // 등록된 번호가 없다면 추가
     await userLottoRef.add(userLottoModel);
   }

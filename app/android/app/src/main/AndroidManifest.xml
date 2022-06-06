@@ -24,9 +24,11 @@
   </queries>
 
    <application
-        android:label="app"
+        android:label="한방!로또"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"
+     >
         <activity
             android:name=".MainActivity"
             android:exported="true"
