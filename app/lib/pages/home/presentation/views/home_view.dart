@@ -21,6 +21,10 @@ class Home extends StatelessWidget {
   /// 댓글 하단 시트
   ///
   void _showBottomSheet(BuildContext context, HomeController controller) {
+    final errMsg = SnackBar(
+        backgroundColor: Colors.red,
+        content: const Text('사용할수 없는 단어가 포함되어 있습니다.')
+    );
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -65,8 +69,10 @@ class Home extends StatelessWidget {
                                           controller.addComment(),
                                           Get.back()
                                         } else {
+                                          controller.clear(),
+                                          Get.back(),
                                           HapticFeedback.heavyImpact(),
-                                          Get.snackbar("경고", "사용할수 없는 단어가 포함되어 있습니다.")
+                                          ScaffoldMessenger.of(context).showSnackBar(errMsg)
                                         }
                                       },
                                       child: const FaIcon(

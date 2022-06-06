@@ -14,6 +14,11 @@ class AccountSetting extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final AuthController authController = Get.find();
 
+    final errMsg = SnackBar(
+        backgroundColor: Colors.red,
+        content: const Text('사용할수 없는 단어가 포함되어 있습니다.')
+    );
+
     return Obx(()=>Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -54,7 +59,7 @@ class AccountSetting extends GetView<HomeController> {
                       Get.back()
                     } else {
                       HapticFeedback.heavyImpact(),
-                      Get.snackbar("경고", "사용할수 없는 단어가 포함되어 있습니다.")
+                      ScaffoldMessenger.of(context).showSnackBar(errMsg)
                     }
                   } else {
                     Get.snackbar("경고", "최소한 한글자 이상 입력하세요.")
