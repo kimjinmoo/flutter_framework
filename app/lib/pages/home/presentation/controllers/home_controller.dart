@@ -206,6 +206,7 @@ class HomeController extends GetxController {
             userId: authController.user.value.userId,
             userName: authController.user.value.userName,
             command: commentController.text,
+            isReport: "N",
             round: currentRound.value,
             regDate: Timestamp.now()))
         .onError((error, stackTrace) => Future.error("시스템에 문제가 발생하였습니다."));

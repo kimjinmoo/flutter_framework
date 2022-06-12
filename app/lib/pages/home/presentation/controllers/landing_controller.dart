@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 ///
 class LandingController extends GetxController {
   // 탭 index
-  var tabIndex = 0.obs;
+  var tabIndex = 2.obs;
 
   void changeTabIndex(int index) {
     tabIndex.value = index;

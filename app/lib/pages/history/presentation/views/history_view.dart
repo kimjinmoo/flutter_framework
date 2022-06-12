@@ -194,7 +194,8 @@ class History extends GetView {
                                                         fontWeight:
                                                             FontWeight.bold))),
                                           ],
-                                        ));
+                                        )
+                                        );
                                       },
                                       icon: Icon(
                                         Icons.remove_circle,

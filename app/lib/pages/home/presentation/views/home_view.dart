@@ -775,6 +775,44 @@ class _CommandItem extends GetView<HomeController> {
                           ],
                         ),
                       ),
+                      InkWell(
+                        onTap: () {
+                          Get.dialog(AlertDialog(
+                            title: Text(
+                              "신고하기",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            content: Text(
+                                "폭언,욕설등 문제 있는 내용이 포함되었나요?\n신고하시겠습니까?"),
+                            actions: [
+                              TextButton(
+                                  onPressed: () async {
+                                    await reportComment(reference.id);
+                                    Get.back();
+                                  },
+                                  child: Text(
+                                    "확인",
+                                    style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight:
+                                        FontWeight.bold),
+                                  )),
+                              TextButton(
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  child: Text("취소",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight:
+                                          FontWeight.bold))),
+                            ],
+                          )
+                          );
+                        },
+                        child: Text("신고하기"),
+                      )
                     ],
                   ),
                 ),

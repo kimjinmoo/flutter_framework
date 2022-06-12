@@ -23,7 +23,9 @@ class Maker extends GetView<MakerController> {
           MediaQuery.of(context).size.width,
           i,
           () => controller.onTapNumber(i),
-          controller.number.value.contains(i))));
+          controller.number.value.contains(i),
+          const Color.fromRGBO(248, 57, 49, 1)
+      )));
     }
     // 구매 카운트
     for (var i = 1; i < 6; i++) {
@@ -31,7 +33,9 @@ class Maker extends GetView<MakerController> {
           MediaQuery.of(context).size.width,
           i,
           () => controller.onChangeCount(i),
-          controller.count.value == i)));
+          controller.count.value == i,
+          Colors.black54
+      )));
     }
 
     // 번호 뽑기 로직 링크
@@ -54,11 +58,11 @@ class Maker extends GetView<MakerController> {
             elevation: 0.0,
             actions: [
               PopupMenuButton(
-                icon: Icon(Icons.more_vert),
+                icon: Icon(Icons.info_outline_rounded),
                   itemBuilder: (_) => [
                     PopupMenuItem<int>(
                       value: 0,
-                      child: Text("번호생성 안내",style: TextStyle(color: Colors.black),),
+                      child: Text("번호생성 로직 안내",style: TextStyle(color: Colors.black),),
                     ),
                   ],
                   onSelected: (item) async {
@@ -81,7 +85,7 @@ class Maker extends GetView<MakerController> {
                   child: Obx(()=>Row(
                     children: [
                       Text(
-                        "선택 - ${controller.getMode()}",
+                        "${controller.getMode()} ",
                         style: TextStyle(
                             color: Colors.black54,
                             fontSize: 17,
@@ -120,7 +124,7 @@ class Maker extends GetView<MakerController> {
                   padding:
                       EdgeInsets.only(top: 7, left: 15, right: 15, bottom: 7),
                   child: Text(
-                    "구매 횟수",
+                    "생성 번호 갯수",
                     style: TextStyle(
                         color: Colors.black54,
                         fontSize: 18,
@@ -190,7 +194,7 @@ class Maker extends GetView<MakerController> {
   }
 
   Widget lottoNumberCheckbox(
-      double width, int number, Function onTap, bool isChecked) {
+      double width, int number, Function onTap, bool isChecked, color) {
     return InkWell(
       onTap: () => onTap(),
       child: Container(
@@ -199,13 +203,13 @@ class Maker extends GetView<MakerController> {
             border: Border(
               top: BorderSide(
                 ////               <--- left side
-                color: Color.fromRGBO(248, 57, 49, 1),
+                color: color,
                 style: BorderStyle.solid,
                 width: 3.0,
               ),
               bottom: BorderSide(
                 //                   <--- left side
-                color: Color.fromRGBO(248, 57, 49, 1),
+                color: color,
                 style: BorderStyle.solid,
                 width: 3.0,
               ),

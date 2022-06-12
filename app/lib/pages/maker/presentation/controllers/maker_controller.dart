@@ -1,4 +1,6 @@
 import 'package:lotto/pages/account/presentation/controllers/auth_controller.dart';
+import 'package:lotto/pages/home/domain/entity/my_lotto_number.dart';
+import 'package:lotto/pages/home/domain/entity/report_model.dart';
 import 'package:lotto/pages/maker/domain/entity/lotto_number_model.dart';
 import 'package:lotto/pages/home/domain/entity/user_lotto_model.dart';
 import 'package:lotto/services/api_service.dart';

@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:lotto/pages/home/domain/entity/commands_model.dart';
-import 'package:lotto/pages/home/domain/entity/user_lotto_model.dart';
+import 'package:lotto/pages/home/domain/entity/my_lotto_number.dart';
+import 'package:lotto/pages/home/domain/entity/report_model.dart';
 import 'package:lotto/pages/account/domain/entity/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lotto/pages/home/domain/entity/user_lotto_model.dart';
 
 // 파이어베이스
 final commandRef = FirebaseFirestore.instance.collection("comments").withConverter<CommandsModel>(
@@ -16,6 +18,11 @@ final userRef = FirebaseFirestore.instance.collection("user").withConverter<User
 );
 final userLottoRef = FirebaseFirestore.instance.collection("lotto").withConverter<UserLottoModel>(
   fromFirestore: (snapshots, _) => UserLottoModel.fromJson(snapshots.data()!),
+  toFirestore: (command, _) => command.toJson(),
+);
+
+final reportRef = FirebaseFirestore.instance.collection("report").withConverter<ReportModel>(
+  fromFirestore: (snapshots, _) => ReportModel.fromJson(snapshots.data()!),
   toFirestore: (command, _) => command.toJson(),
 );
 enum CommandsQuery {
@@ -36,7 +43,7 @@ extension on Query<CommandsModel> {
 
 /// 댓글 조회하기
 Stream<QuerySnapshot<CommandsModel>> getFirebaseInstance(query, round) {
-  return commandRef.where('round', isEqualTo: round).queryBy(query).limit(100).snapshots();
+  return commandRef.where('round', isEqualTo: round).where('isReport', isEqualTo: "N").queryBy(query).snapshots();
 }
 
 ///
@@ -60,6 +67,7 @@ Future<UserModel> updateUserName(String userId, String userName) async {
             userId: command.userId,
             userName: updatedUserModel.userName,
             command: command.command,
+            isReport: command.isReport,
             round: command.round,
             regDate: command.regDate));
       });
@@ -87,6 +95,15 @@ Future<void> updateCommand(widget) async {
 /// 댓글을 삭제한다.
 Future<void> deleteComment(id) async {
   await commandRef.doc(id).delete();
+}
+
+// 댓글을 신고한다.
+Future<void> reportComment(id) async {
+  return commandRef
+      .doc(id)
+      .update({
+    'isReport': "Y"
+  });
 }
 
 // 유저값을 가져온다.
