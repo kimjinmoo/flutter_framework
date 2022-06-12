@@ -123,6 +123,26 @@ class HomeController extends GetxController {
     winningNumberInfo.value = winningNumber;
   }
 
+  // 최신 회차 갱신
+  Future<void> reloadRound() async {
+    // 승리 번호 히스토리 가져온다.
+    WinningNumber? winningNumber = await fetchLottoWinningHistory(null)
+        .timeout(const Duration(seconds: 10))
+        .catchError((onError) {
+      print(onError.toString());
+      // 에러 체크
+      isError.value = true;
+      throw Future.error("101 - 서버에 오류가 발생하였습니다.");
+    });
+    if (winningNumber != null) {
+      // 최신회차가 달라질경우 갱신
+      if(nextRound.value != (winningNumber.round+1)) {
+        // 차주 회차 초기화
+        nextRound.value = winningNumber.round + 1;
+      }
+    }
+  }
+
   ///
   /// 생성된 내 로또 번호 히스토리를 가져온다.
   ///
@@ -144,6 +164,8 @@ class HomeController extends GetxController {
         .timeout(const Duration(seconds: 10));
     // 히스토리 가져오기
     await fetchMyCurrentRoundLottoHistory();
+    // 최신회차 리로드
+    await reloadRound();
     isProgress.value = false;
   }
 
@@ -159,6 +181,8 @@ class HomeController extends GetxController {
         .timeout(const Duration(seconds: 10));
     // 히스토리 가져오기
     await fetchMyCurrentRoundLottoHistory();
+    // 최신회차 리로드
+    await reloadRound();
     isProgress.value = false;
   }
 
