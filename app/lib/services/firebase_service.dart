@@ -72,6 +72,8 @@ Future<UserModel> updateUserName(String userId, String userName) async {
             regDate: command.regDate));
       });
     }
+    // login 옵션 대응
+    updatedUserModel.isLogin = true;
     return updatedUserModel;
   }
   throw Future.error("없는 유저입니다,");

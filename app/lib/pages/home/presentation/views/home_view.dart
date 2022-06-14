@@ -192,15 +192,15 @@ class Home extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Obx(() => IconButton(
+                    IconButton(
                         onPressed: controller.isProgress.value
                             ? null
                             : () {
-                                controller.toPreviousRound().onError(
-                                    (error, stackTrace) =>
-                                        Get.snackbar("안내", error.toString()));
-                              },
-                        icon: const FaIcon(FontAwesomeIcons.angleLeft))),
+                          controller.toPreviousRound().onError(
+                                  (error, stackTrace) =>
+                                  Get.snackbar("안내", error.toString()));
+                        },
+                        icon: const FaIcon(FontAwesomeIcons.angleLeft)),
                     Expanded(
                         flex: 1,
                         child: Container(
@@ -211,19 +211,19 @@ class Home extends StatelessWidget {
                           ),
                           height: 40,
                         )),
-                    Obx(() => controller.winningNumberInfo.value != null
+                    controller.winningNumberInfo.value != null
                         ? IconButton(
-                            onPressed: controller.isProgress.value
-                                ? null
-                                : () {
-                                    controller.toNextRound().onError(
-                                        (error, stackTrace) =>
-                                            HapticFeedback.heavyImpact());
-                                  },
-                            icon: const FaIcon(FontAwesomeIcons.angleRight))
+                        onPressed: controller.isProgress.value
+                            ? null
+                            : () {
+                          controller.toNextRound().onError(
+                                  (error, stackTrace) =>
+                                  HapticFeedback.heavyImpact());
+                        },
+                        icon: const FaIcon(FontAwesomeIcons.angleRight))
                         : const IconButton(
-                            onPressed: null,
-                            icon: FaIcon(FontAwesomeIcons.angleRight)))
+                        onPressed: null,
+                        icon: FaIcon(FontAwesomeIcons.angleRight))
                   ],
                 ),
                 Align(
@@ -267,46 +267,46 @@ class Home extends StatelessWidget {
                 Flexible(
                     fit: FlexFit.tight,
                     flex: 1,
-                    child: Obx(() => SingleChildScrollView(
-                          child: StreamBuilder<QuerySnapshot<CommandsModel>>(
-                            stream: getFirebaseInstance(
-                                CommandsQuery.createDateDesc,
-                                controller.currentRound.value),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return Center(
-                                  child: Text(snapshot.error.toString()),
-                                );
-                              }
-                              if (!snapshot.hasData) {
-                                return SizedBox();
-                              }
+                    child: SingleChildScrollView(
+                      child: StreamBuilder<QuerySnapshot<CommandsModel>>(
+                        stream: getFirebaseInstance(
+                            CommandsQuery.createDateDesc,
+                            controller.currentRound.value),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Center(
+                              child: Text(snapshot.error.toString()),
+                            );
+                          }
+                          if (!snapshot.hasData) {
+                            return SizedBox();
+                          }
 
-                              final data = snapshot.requireData;
+                          final data = snapshot.requireData;
 
-                              return data.size > 0
-                                  ? ListView.builder(
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemCount: data.size,
-                                      itemBuilder: (context, index) {
-                                        return _CommandItem(
-                                          model: data.docs[index].data(),
-                                          reference: data.docs[index].reference,
-                                          isOwner: data.docs[index]
-                                                  .data()
-                                                  .userId ==
-                                              authController.user.value.userId,
-                                        );
-                                      },
-                                    )
-                                  : const Center(
-                                      child: Text("댓글을 달아보세요."),
-                                    );
+                          return data.size > 0
+                              ? ListView.builder(
+                            physics:
+                            const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: data.size,
+                            itemBuilder: (context, index) {
+                              return _CommandItem(
+                                model: data.docs[index].data(),
+                                reference: data.docs[index].reference,
+                                isOwner: data.docs[index]
+                                    .data()
+                                    .userId ==
+                                    authController.user.value.userId,
+                              );
                             },
-                          ),
-                        ))),
+                          )
+                              : const Center(
+                            child: Text("댓글을 달아보세요."),
+                          );
+                        },
+                      ),
+                    )),
               ],
             ),
           )
@@ -319,9 +319,9 @@ class Home extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     padding: const EdgeInsets.only(left: 10),
                     height: 25,
-                    child: Obx(() => Text(
+                    child: Text(
                         "${controller.currentRound.value} 회차 당첨번호",
-                        style: contentsTitle)),
+                        style: contentsTitle),
                   ),
                   controller.nextRound.value != controller.currentRound.value
                       ? Expanded(
@@ -348,61 +348,61 @@ class Home extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Obx(() => IconButton(
+                  IconButton(
                       onPressed: controller.isProgress.value
                           ? null
                           : () {
-                              controller.toPreviousRound().onError(
-                                  (error, stackTrace) =>
-                                      Get.snackbar("안내", error.toString()));
-                            },
-                      icon: const FaIcon(FontAwesomeIcons.angleLeft))),
+                        controller.toPreviousRound().onError(
+                                (error, stackTrace) =>
+                                Get.snackbar("안내", error.toString()));
+                      },
+                      icon: const FaIcon(FontAwesomeIcons.angleLeft)),
                   Expanded(
                       flex: 1,
                       child: Container(
                         alignment: Alignment.center,
-                        child: Obx(() => controller.winningNumberInfo.value !=
-                                null
+                        child: controller.winningNumberInfo.value !=
+                            null
                             ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  createCircle(
-                                      controller.winningNumberInfo.value?.num1),
-                                  createCircle(
-                                      controller.winningNumberInfo.value?.num2),
-                                  createCircle(
-                                      controller.winningNumberInfo.value?.num3),
-                                  createCircle(
-                                      controller.winningNumberInfo.value?.num4),
-                                  createCircle(
-                                      controller.winningNumberInfo.value?.num5),
-                                  createCircle(
-                                      controller.winningNumberInfo.value?.num6),
-                                  Text("+"),
-                                  createCircle(controller
-                                      .winningNumberInfo.value?.numEx),
-                                ],
-                              )
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            createCircle(
+                                controller.winningNumberInfo.value?.num1),
+                            createCircle(
+                                controller.winningNumberInfo.value?.num2),
+                            createCircle(
+                                controller.winningNumberInfo.value?.num3),
+                            createCircle(
+                                controller.winningNumberInfo.value?.num4),
+                            createCircle(
+                                controller.winningNumberInfo.value?.num5),
+                            createCircle(
+                                controller.winningNumberInfo.value?.num6),
+                            Text("+"),
+                            createCircle(controller
+                                .winningNumberInfo.value?.numEx),
+                          ],
+                        )
                             : Text(
-                                "이번주 발표",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black54,
-                                    fontSize: 21),
-                              )),
+                          "이번주 발표",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black54,
+                              fontSize: 21),
+                        ),
                         height: 40,
                       )),
-                  Obx(() => IconButton(
+                  IconButton(
                       onPressed: (controller.isProgress.value ||
-                              controller.winningNumberInfo.value == null)
+                          controller.winningNumberInfo.value == null)
                           ? null
                           : () {
-                              controller.toNextRound().onError(
-                                  (error, stackTrace) =>
-                                      HapticFeedback.heavyImpact());
-                            },
-                      icon: const FaIcon(FontAwesomeIcons.angleRight)))
+                        controller.toNextRound().onError(
+                                (error, stackTrace) =>
+                                HapticFeedback.heavyImpact());
+                      },
+                      icon: const FaIcon(FontAwesomeIcons.angleRight))
                 ],
               ),
               Theme(
@@ -508,16 +508,16 @@ class Home extends StatelessWidget {
                   ],
                 ),
               ),
-              Obx(() => controller.isAdError.value
+              controller.isAdError.value
                   ? SizedBox()
                   : Container(
-                      padding: EdgeInsets.only(top: 5, bottom: 5),
-                      alignment: Alignment.center,
-                      height: bannerAd.size.height.toDouble(),
-                      width: bannerAd.size.width.toDouble(),
-                      color: Colors.grey.shade300,
-                      child: AdWidget(ad: bannerAd),
-                    )),
+                padding: EdgeInsets.only(top: 5, bottom: 5),
+                alignment: Alignment.center,
+                height: bannerAd.size.height.toDouble(),
+                width: bannerAd.size.width.toDouble(),
+                color: Colors.grey.shade300,
+                child: AdWidget(ad: bannerAd),
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -543,46 +543,47 @@ class Home extends StatelessWidget {
               Flexible(
                   fit: FlexFit.tight,
                   flex: 1,
-                  child: Obx(() => SingleChildScrollView(
-                        child: StreamBuilder<QuerySnapshot<CommandsModel>>(
-                          stream: getFirebaseInstance(
-                              CommandsQuery.createDateDesc,
-                              controller.currentRound.value),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                              return Center(
-                                child: Text(snapshot.error.toString()),
-                              );
-                            }
-                            if (!snapshot.hasData) {
-                              return SizedBox();
-                            }
+                  child: SingleChildScrollView(
+                    child: StreamBuilder<QuerySnapshot<CommandsModel>>(
+                      stream: getFirebaseInstance(
+                          CommandsQuery.createDateDesc,
+                          controller.currentRound.value),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(snapshot.error.toString()),
+                          );
+                        }
+                        if (!snapshot.hasData) {
+                          return SizedBox();
+                        }
 
-                            final data = snapshot.requireData;
+                        final data = snapshot.requireData;
 
-                            return data.size > 0
-                                ? ListView.builder(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: data.size,
-                                    itemBuilder: (context, index) {
-                                      return _CommandItem(
-                                        model: data.docs[index].data(),
-                                        reference: data.docs[index].reference,
-                                        isOwner: data.docs[index]
-                                                .data()
-                                                .userId ==
-                                            authController.user.value.userId,
-                                      );
-                                    },
-                                  )
-                                : const Center(
-                                    child: Text("댓글을 달아보세요."),
-                                  );
+                        return data.size > 0
+                            ? ListView.builder(
+                          physics:
+                          const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: data.size,
+                          itemBuilder: (context, index) {
+                            return _CommandItem(
+                              model: data.docs[index].data(),
+                              reference: data.docs[index].reference,
+                              isOwner: data.docs[index]
+                                  .data()
+                                  .userId ==
+                                  authController.user.value.userId,
+                            );
                           },
-                        ),
-                      ))),
+                        )
+                            : const Center(
+                          child: Text("댓글을 달아보세요."),
+                        );
+                      },
+                    ),
+                  )
+              ),
             ],
           );
   }

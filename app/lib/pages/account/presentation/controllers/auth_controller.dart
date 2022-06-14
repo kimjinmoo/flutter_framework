@@ -54,6 +54,9 @@ class AuthController extends GetxController {
     if (userName.isNotEmpty) {
       isProgress.value = true;
       UserModel updatedUser = await updateUserName(user.value.userId, userName);
+      // 유저명 업데이트
+      user.value = updatedUser;
+      // 유저명 변경
       this.userName.value = updatedUser.userName;
       isProgress.value = false;
     }
