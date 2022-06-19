@@ -13,10 +13,16 @@ import 'package:get/get.dart';
 ///
 class MakerController extends GetxController {
   AuthController authController = Get.find();
+
   // 번호
   RxSet<int> number = <int>{}.obs;
+
   // 생성 카운트
   RxInt count = 1.obs;
+
+  // 생성한 번호
+  RxList<MyLottoNumber> createLotto = <MyLottoNumber>[].obs;
+
   // 프로세스 여부 true 처리중, false 처리완료
   RxBool isProcess = false.obs;
 
@@ -29,10 +35,10 @@ class MakerController extends GetxController {
   /// 탭이벤트 처리
   ///
   void onTapNumber(int number) {
-    if(this.number.contains(number)) {
+    if (this.number.contains(number)) {
       this.number.value.remove(number);
     } else {
-      if(this.number.value.length < 6) {
+      if (this.number.value.length < 6) {
         this.number.value.add(number);
       }
     }
@@ -51,9 +57,9 @@ class MakerController extends GetxController {
     final testDay = DateTime(now.year, now.month, now.day, 20, 30);
     final startDay = DateTime(now.year, now.month, now.day, 20, 30);
     final stopDay = DateTime(now.year, now.month, now.day, 20, 45);
-    if(now.weekday == 1 && now.compareTo(startDay) >= 0) {
+    if (now.weekday == 1 && now.compareTo(startDay) >= 0) {
       // print(now.compareTo(startDay));
-      if(startDay.difference(stopDay).inMinutes > 0) {
+      if (startDay.difference(stopDay).inMinutes > 0) {
         throw Exception("초기화");
         return;
       }
@@ -70,33 +76,42 @@ class MakerController extends GetxController {
   /// 리턴값은 void이다.
   Future<void> createNumbers(int round, List<int> numbers, int count) async {
     isProcess.value = true;
+    // 리스트 초기화
+    createLotto.value = [];
+    // 등록된 번호 리스트
+    List<MyLottoNumber> lottoNumbers = [];
     try {
-      for(int index = 0; count > index; index++) {
+      for (int index = 0; count > index; index++) {
         // 번호 가져오기
         LottoNumberModel model = await fetchWinningLottoNumbers(numbers);
-        if(model.numbers.isNotEmpty) {
+        if (model.numbers.isNotEmpty) {
+          MyLottoNumber number = MyLottoNumber(
+              num1: model.numbers[0],
+              num2: model.numbers[1],
+              num3: model.numbers[2],
+              num4: model.numbers[3],
+              num5: model.numbers[4],
+              num6: model.numbers[5],
+              numEx: 0);
+          lottoNumbers.add(number);
           await addMyLotto(UserLottoModel(
-              userId: authController.user.value.userId,
-              round: round,
-              numbers: [
-                MyLottoNumber(
-                    num1: model.numbers[0],
-                    num2: model.numbers[1],
-                    num3: model.numbers[2],
-                    num4: model.numbers[3],
-                    num5: model.numbers[4],
-                    num6: model.numbers[5],
-                    numEx: 0)
-              ],
-              regDate: Timestamp.now())).onError((error, stackTrace) => print(error));
+                  userId: authController.user.value.userId,
+                  round: round,
+                  numbers: [number],
+                  regDate: Timestamp.now()))
+              .onError((error, stackTrace) => print(error));
         }
       }
-    } catch(e) {
+    } catch (e) {
       throw Future.error(e.toString());
     } finally {
       // 초기화
       number.value = {};
+      // 생성 데이터 Set
+      createLotto.value = lottoNumbers;
+      // 생성 카운트 초기화
       this.count.value = 1;
+      // 프로세스 종료
       isProcess.value = false;
     }
   }
@@ -117,7 +132,10 @@ class MakerController extends GetxController {
   void clear() {
     // 초기화
     number.value = {};
+    // 생성 데이터 Set
+    createLotto.value = [];
   }
+
   ///
   /// 수동으로 선택한 번호를 리턴한다.
   ///
@@ -136,12 +154,19 @@ class MakerController extends GetxController {
   /// 현재 뽑기 모드
   ///
   String getMode() {
-    if(number.length > 0 && number.length < 6) {
+    if (number.length > 0 && number.length < 6) {
       return "수동+자동";
     }
-    if(number.length == 6) {
+    if (number.length == 6) {
       return "수동";
     }
     return "자동";
+  }
+
+  ///
+  /// 진행 Set
+  ///
+  void setProgress(bool isProgress) {
+    this.isProcess.value = isProgress;
   }
 }

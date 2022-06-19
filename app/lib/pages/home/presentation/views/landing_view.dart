@@ -47,7 +47,7 @@ class LandingView extends GetView<LandingController> {
               size: 20.0,
             ),
           ),
-          label: '홈',
+          label: '번호확인',
         ),
         BottomNavigationBarItem(
           icon: Container(
