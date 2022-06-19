@@ -25,12 +25,16 @@ class Maker extends GetView<MakerController> {
                       ? Center(
                           child: Wrap(
                             children: const [
-                              CircularProgressIndicator(),
-                              Padding(padding: EdgeInsets.only(left: 20)),
+                            SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(),
+                            ),
+                              Padding(padding: EdgeInsets.only(left: 10)),
                               Text(
                                 "확률 높은 번호를 뽑고 있어요!",
                                 style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.bold),
+                                    fontSize: 20, fontWeight: FontWeight.bold),
                               )
                             ],
                           ),
