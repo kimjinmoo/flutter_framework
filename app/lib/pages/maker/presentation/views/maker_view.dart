@@ -3,12 +3,15 @@ import 'package:lotto/pages/maker/presentation/controllers/maker_controller.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lotto/ui/common_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 ///
 /// 로또번호를 생성한다.
 ///
 class Maker extends GetView<MakerController> {
+
+  // 뽑기 하단 sheet
   void _showBottomSheet(BuildContext context, HomeController homeController,
       MakerController makerController) {
     showModalBottomSheet(
@@ -17,7 +20,7 @@ class Maker extends GetView<MakerController> {
         backgroundColor: Colors.transparent,
         builder: (context) {
           return FractionallySizedBox(
-            heightFactor: 0.7,
+            heightFactor: 0.6,
             child: Obx(() => Container(
                   color: Colors.white,
                   child: (controller.isProcess.value ||
@@ -47,13 +50,15 @@ class Maker extends GetView<MakerController> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          "번호 확인",
+                          "AI 번호 생성",
                           style: TextStyle(
-                              fontSize: 30,
+                              fontSize: 25,
                               fontWeight: FontWeight.bold),
                         ),
                         Divider(
                           height: 10,
+                          color: Colors.black26,
+                          thickness: 1,
                         ),
                         ListView.builder(
                             scrollDirection: Axis.vertical,
@@ -62,20 +67,37 @@ class Maker extends GetView<MakerController> {
                                 .createLotto.value.length,
                             itemBuilder: (con, inx) {
                               return Center(
-                                child: Text(
-                                  makerController.createLotto.value[inx]
-                                      .getWinningNumber(),
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      color: Colors.black54,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                child:
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            CommonWidget.createCircle(makerController.createLotto.value[inx].num1),
+                                            CommonWidget.paddingL5(),
+                                            CommonWidget.createCircle(makerController.createLotto.value[inx].num2),
+                                            CommonWidget.paddingL5(),
+                                            CommonWidget.createCircle(makerController.createLotto.value[inx].num3),
+                                            CommonWidget.paddingL5(),
+                                            CommonWidget.createCircle(makerController.createLotto.value[inx].num4),
+                                            CommonWidget.paddingL5(),
+                                            CommonWidget.createCircle(makerController.createLotto.value[inx].num5),
+                                            CommonWidget.paddingL5(),
+                                            CommonWidget.createCircle(makerController.createLotto.value[inx].num6),
+                                          ],
+                                        ),
+                                        Divider(height: 10, color: Colors.black26, thickness: 1,),
+                                        const Padding(padding: EdgeInsets.only(top: 5))
+                                      ],
+                                    )
                               );
                             }),
                         Expanded(child: Align(
                           alignment: FractionalOffset.bottomCenter,
                           child: Padding(
-                            padding: EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
                             child: OutlinedButton.icon(
                                 onPressed: () async => Get.back(),
                                 style: ButtonStyle(
@@ -219,7 +241,7 @@ class Maker extends GetView<MakerController> {
                   padding:
                       EdgeInsets.only(top: 7, left: 15, right: 15, bottom: 7),
                   child: Text(
-                    "생성 번호 갯수",
+                    "구매",
                     style: TextStyle(
                         color: Colors.black54,
                         fontSize: 18,

@@ -2,6 +2,7 @@ import 'package:lotto/pages/account/presentation/controllers/auth_controller.dar
 import 'package:lotto/pages/home/domain/entity/commands_model.dart';
 import 'package:lotto/pages/home/presentation/controllers/home_controller.dart';
 import 'package:lotto/services/firebase_service.dart';
+import 'package:lotto/ui/common_widget.dart';
 import 'package:lotto/utils/ad_utils.dart';
 import 'package:lotto/utils/time_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,9 +22,9 @@ class Home extends StatelessWidget {
   /// 댓글 하단 시트
   ///
   void _showBottomSheet(BuildContext context, HomeController controller) {
-    final errMsg = SnackBar(
+    const errMsg = SnackBar(
         backgroundColor: Colors.red,
-        content: const Text('사용할수 없는 단어가 포함되어 있습니다.')
+        content: Text('사용할수 없는 단어가 포함되어 있습니다.')
     );
     showModalBottomSheet(
       context: context,
@@ -95,7 +96,7 @@ class Home extends StatelessWidget {
           ),
         );
       },
-    );
+    ).whenComplete(() => controller.clear());
   }
 
   // 컨텐츠 타이틀
@@ -367,20 +368,20 @@ class Home extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            createCircle(
+                            CommonWidget.createCircle(
                                 controller.winningNumberInfo.value?.num1),
-                            createCircle(
+                            CommonWidget.createCircle(
                                 controller.winningNumberInfo.value?.num2),
-                            createCircle(
+                            CommonWidget.createCircle(
                                 controller.winningNumberInfo.value?.num3),
-                            createCircle(
+                            CommonWidget.createCircle(
                                 controller.winningNumberInfo.value?.num4),
-                            createCircle(
+                            CommonWidget.createCircle(
                                 controller.winningNumberInfo.value?.num5),
-                            createCircle(
+                            CommonWidget.createCircle(
                                 controller.winningNumberInfo.value?.num6),
                             Text("+"),
-                            createCircle(controller
+                            CommonWidget.createCircle(controller
                                 .winningNumberInfo.value?.numEx),
                           ],
                         )
@@ -586,36 +587,6 @@ class Home extends StatelessWidget {
               ),
             ],
           );
-  }
-
-  /// 로또 번호 볼 생성
-  Widget createCircle(int? number) {
-    var bgColor = const Color.fromRGBO(255, 212, 0, 1.0);
-    var textColor = const Color.fromRGBO(255, 255, 255, 1.0);
-    if (number! < 11) {
-      bgColor = const Color.fromRGBO(255, 212, 0, 1.0);
-      textColor = const Color.fromRGBO(0, 0, 0, 1.0);
-    } else if (number > 10 && number < 21) {
-      bgColor = const Color.fromRGBO(70, 130, 180, 1.0);
-    } else if (number > 20 && number < 31) {
-      bgColor = const Color.fromRGBO(255, 0, 0, 1.0);
-    } else if (number > 30 && number < 41) {
-      bgColor = const Color.fromRGBO(0, 0, 0, 1.0);
-    } else if (number > 40 && number < 50) {
-      bgColor = const Color.fromRGBO(0, 128, 0, 1.0);
-    }
-    return CircleAvatar(
-      minRadius: 17,
-      maxRadius: 17,
-      backgroundColor: bgColor,
-      child: Center(
-        child: Text(
-          number.toString().padLeft(2, '0'),
-          style: TextStyle(
-              color: textColor, fontSize: 14, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
   }
 }
 

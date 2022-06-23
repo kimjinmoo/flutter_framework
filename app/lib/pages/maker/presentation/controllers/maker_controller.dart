@@ -3,6 +3,7 @@ import 'package:lotto/pages/home/domain/entity/my_lotto_number.dart';
 import 'package:lotto/pages/home/domain/entity/report_model.dart';
 import 'package:lotto/pages/maker/domain/entity/lotto_number_model.dart';
 import 'package:lotto/pages/home/domain/entity/user_lotto_model.dart';
+import 'package:lotto/pages/maker/domain/lotto_number.dart';
 import 'package:lotto/services/api_service.dart';
 import 'package:lotto/services/firebase_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -81,26 +82,28 @@ class MakerController extends GetxController {
     // 등록된 번호 리스트
     List<MyLottoNumber> lottoNumbers = [];
     try {
-      for (int index = 0; count > index; index++) {
-        // 번호 가져오기
-        LottoNumberModel model = await fetchWinningLottoNumbers(numbers);
-        if (model.numbers.isNotEmpty) {
+      // 번호 가져오기
+      LottoNumber createdNumbers = await fetchWinningLottoNumbers(count, numbers);
+      if (createdNumbers.lottoModels.isNotEmpty) {
+        // 추출한 번호를 DB에 저장한다.
+        createdNumbers.lottoModels.forEach((element) {
           MyLottoNumber number = MyLottoNumber(
-              num1: model.numbers[0],
-              num2: model.numbers[1],
-              num3: model.numbers[2],
-              num4: model.numbers[3],
-              num5: model.numbers[4],
-              num6: model.numbers[5],
+              num1: element.numbers[0],
+              num2: element.numbers[1],
+              num3: element.numbers[2],
+              num4: element.numbers[3],
+              num5: element.numbers[4],
+              num6: element.numbers[5],
               numEx: 0);
           lottoNumbers.add(number);
-          await addMyLotto(UserLottoModel(
-                  userId: authController.user.value.userId,
-                  round: round,
-                  numbers: [number],
-                  regDate: Timestamp.now()))
-              .onError((error, stackTrace) => print(error));
-        }
+        });
+
+        await addMyLotto(UserLottoModel(
+            userId: authController.user.value.userId,
+            round: round,
+            numbers: lottoNumbers,
+            regDate: Timestamp.now()))
+            .onError((error, stackTrace) => print(error));
       }
     } catch (e) {
       throw Future.error(e.toString());
@@ -155,7 +158,7 @@ class MakerController extends GetxController {
   ///
   String getMode() {
     if (number.length > 0 && number.length < 6) {
-      return "수동+자동";
+      return "반자동";
     }
     if (number.length == 6) {
       return "수동";

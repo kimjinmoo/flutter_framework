@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:lotto/pages/home/domain/rank.dart';
 import 'package:lotto/pages/home/presentation/controllers/home_controller.dart';
 import 'package:lotto/pages/maker/presentation/controllers/maker_controller.dart';
+import 'package:lotto/ui/common_widget.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -18,27 +19,11 @@ class History extends GetView {
     return Scaffold(
         key: controller.scaffoldKey,
         appBar: AppBar(
-          centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.black),
-          title: Obx(() => Text("${controller.currentRound}회차",
-              style: TextStyle(color: Colors.black))),
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          actions: [
-            PopupMenuButton(
-              icon: Icon(Icons.filter_alt),
-              itemBuilder: (_) => [
-                PopupMenuItem<int>(
-                  value: 0,
-                  child: Text(
-                    "회차변경",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ],
-              onSelected: (item) async {
-                switch (item) {
-                  case 0:
+            centerTitle: true,
+            iconTheme: const IconThemeData(color: Colors.black),
+            title: Obx(
+              () => InkWell(
+                  onTap: () async {
                     await showDialog<int>(
                         context: context,
                         builder: (BuildContext context) {
@@ -46,7 +31,7 @@ class History extends GetView {
                           controller.initTempRound();
                           if (controller.nextRound.value > 1) {
                             return Obx(() => AlertDialog(
-                                  title: Text("원하는 회차를 선택하세요."),
+                                  title: Text("회차선택", style: TextStyle(fontWeight: FontWeight.bold),),
                                   content: NumberPicker(
                                     value: controller.tempRoundCode.value,
                                     minValue: 1,
@@ -57,6 +42,11 @@ class History extends GetView {
                                   ),
                                   actions: [
                                     ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Colors.purple,
+                                          textStyle: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold)),
                                       label: Text("확인"),
                                       onPressed: controller.isProgress.value
                                           ? null
@@ -67,8 +57,16 @@ class History extends GetView {
                                               Get.back();
                                             },
                                       icon: controller.isProgress.value
-                                          ? SizedBox(height: 15, width: 15, child: CircularProgressIndicator(),)
-                                          : Icon(Icons.check, size: 15,),
+                                          ? SizedBox(
+                                              height: 15,
+                                              width: 15,
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            )
+                                          : Icon(
+                                              Icons.check,
+                                              size: 15,
+                                            ),
                                     )
                                   ],
                                 ));
@@ -87,12 +85,12 @@ class History extends GetView {
                             );
                           }
                         });
-                    break;
-                }
-              },
+                  },
+                  child: Text("${controller.currentRound}회차",
+                      style: TextStyle(color: Colors.black))),
             ),
-          ],
-        ),
+            backgroundColor: Colors.transparent,
+            elevation: 0.0),
         body: list(controller, makeController));
   }
 
@@ -116,10 +114,8 @@ class History extends GetView {
                               child: ListTile(
                                   contentPadding: EdgeInsets.symmetric(
                                       horizontal: 20.0, vertical: 10.0),
-                                  leading: Text("${inx + 1}"),
                                   title: Text(
-                                    controller.myLottoHistory.value.numbers[inx]
-                                        .getWinningNumber(),
+                                    "로딩",
                                     style: TextStyle(
                                         color: Colors.black54,
                                         fontWeight: FontWeight.bold),
@@ -143,13 +139,47 @@ class History extends GetView {
                           child: ListTile(
                               contentPadding: EdgeInsets.symmetric(
                                   horizontal: 20.0, vertical: 10.0),
-                              leading: Text("${inx + 1}"),
-                              title: Text(
-                                controller.myLottoHistory.value.numbers[inx]
-                                    .getWinningNumber(),
-                                style: TextStyle(
-                                    color: Colors.black54,
-                                    fontWeight: FontWeight.bold),
+                              title: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CommonWidget.createCircle(controller
+                                        .myLottoHistory
+                                        .value
+                                        .numbers[inx]
+                                        .num1),
+                                    CommonWidget.paddingL5(),
+                                    CommonWidget.createCircle(controller
+                                        .myLottoHistory
+                                        .value
+                                        .numbers[inx]
+                                        .num2),
+                                    CommonWidget.paddingL5(),
+                                    CommonWidget.createCircle(controller
+                                        .myLottoHistory
+                                        .value
+                                        .numbers[inx]
+                                        .num3),
+                                    CommonWidget.paddingL5(),
+                                    CommonWidget.createCircle(controller
+                                        .myLottoHistory
+                                        .value
+                                        .numbers[inx]
+                                        .num4),
+                                    CommonWidget.paddingL5(),
+                                    CommonWidget.createCircle(controller
+                                        .myLottoHistory
+                                        .value
+                                        .numbers[inx]
+                                        .num5),
+                                    CommonWidget.paddingL5(),
+                                    CommonWidget.createCircle(controller
+                                        .myLottoHistory
+                                        .value
+                                        .numbers[inx]
+                                        .num6),
+                                  ],
+                                ),
                               ),
                               trailing: controller.winningNumberInfo.value !=
                                       null
@@ -194,8 +224,7 @@ class History extends GetView {
                                                         fontWeight:
                                                             FontWeight.bold))),
                                           ],
-                                        )
-                                        );
+                                        ));
                                       },
                                       icon: Icon(
                                         Icons.remove_circle,
