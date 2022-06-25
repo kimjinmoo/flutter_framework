@@ -1,13 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:lotto/pages/account/presentation/controllers/auth_controller.dart';
 import 'package:lotto/pages/home/domain/entity/my_lotto_number.dart';
-import 'package:lotto/pages/home/domain/entity/report_model.dart';
-import 'package:lotto/pages/maker/domain/entity/lotto_number_model.dart';
 import 'package:lotto/pages/home/domain/entity/user_lotto_model.dart';
 import 'package:lotto/pages/maker/domain/lotto_number.dart';
 import 'package:lotto/services/api_service.dart';
 import 'package:lotto/services/firebase_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
 
 ///
 /// 번호 생성 컨트롤러
@@ -83,7 +81,8 @@ class MakerController extends GetxController {
     List<MyLottoNumber> lottoNumbers = [];
     try {
       // 번호 가져오기
-      LottoNumber createdNumbers = await fetchWinningLottoNumbers(count, numbers);
+      LottoNumber createdNumbers =
+          await fetchWinningLottoNumbers(count, numbers);
       if (createdNumbers.lottoModels.isNotEmpty) {
         // 추출한 번호를 DB에 저장한다.
         createdNumbers.lottoModels.forEach((element) {
@@ -97,13 +96,15 @@ class MakerController extends GetxController {
               numEx: 0);
           lottoNumbers.add(number);
         });
-
-        await addMyLotto(UserLottoModel(
+        await addMyLotto(
+          UserLottoModel(
             userId: authController.user.value.userId,
             round: round,
             numbers: lottoNumbers,
-            regDate: Timestamp.now()))
-            .onError((error, stackTrace) => print(error));
+            maxRank: authController.user.value.maxRank,
+            regDate: Timestamp.now(),
+          ),
+        ).onError((error, stackTrace) => print(error));
       }
     } catch (e) {
       throw Future.error(e.toString());

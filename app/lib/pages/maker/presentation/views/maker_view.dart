@@ -1,8 +1,8 @@
-import 'package:lotto/pages/home/presentation/controllers/home_controller.dart';
-import 'package:lotto/pages/maker/presentation/controllers/maker_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lotto/pages/home/presentation/controllers/home_controller.dart';
+import 'package:lotto/pages/maker/presentation/controllers/maker_controller.dart';
 import 'package:lotto/ui/common_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -10,7 +10,6 @@ import 'package:url_launcher/url_launcher.dart';
 /// 로또번호를 생성한다.
 ///
 class Maker extends GetView<MakerController> {
-
   // 뽑기 하단 sheet
   void _showBottomSheet(BuildContext context, HomeController homeController,
       MakerController makerController) {
@@ -28,11 +27,11 @@ class Maker extends GetView<MakerController> {
                       ? Center(
                           child: Wrap(
                             children: const [
-                            SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(),
-                            ),
+                              SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(),
+                              ),
                               Padding(padding: EdgeInsets.only(left: 10)),
                               Text(
                                 "확률 높은 번호를 뽑고 있어요!",
@@ -43,83 +42,105 @@ class Maker extends GetView<MakerController> {
                           ),
                         )
                       : Padding(
-                    padding:
-                    EdgeInsets.only(left: 15, top: 30, right: 15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          "AI 번호 생성",
-                          style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Divider(
-                          height: 10,
-                          color: Colors.black26,
-                          thickness: 1,
-                        ),
-                        ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: makerController
-                                .createLotto.value.length,
-                            itemBuilder: (con, inx) {
-                              return Center(
-                                child:
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                          padding:
+                              EdgeInsets.only(left: 15, top: 30, right: 15),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "AI 번호 생성",
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold),
+                              ),
+                              Divider(
+                                height: 10,
+                                color: Colors.black26,
+                                thickness: 1,
+                              ),
+                              ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount:
+                                      makerController.createLotto.value.length,
+                                  itemBuilder: (con, inx) {
+                                    return Center(
+                                        child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            CommonWidget.createCircle(makerController.createLotto.value[inx].num1),
+                                            CommonWidget.createCircle(
+                                                makerController.createLotto
+                                                    .value[inx].num1),
                                             CommonWidget.paddingL5(),
-                                            CommonWidget.createCircle(makerController.createLotto.value[inx].num2),
+                                            CommonWidget.createCircle(
+                                                makerController.createLotto
+                                                    .value[inx].num2),
                                             CommonWidget.paddingL5(),
-                                            CommonWidget.createCircle(makerController.createLotto.value[inx].num3),
+                                            CommonWidget.createCircle(
+                                                makerController.createLotto
+                                                    .value[inx].num3),
                                             CommonWidget.paddingL5(),
-                                            CommonWidget.createCircle(makerController.createLotto.value[inx].num4),
+                                            CommonWidget.createCircle(
+                                                makerController.createLotto
+                                                    .value[inx].num4),
                                             CommonWidget.paddingL5(),
-                                            CommonWidget.createCircle(makerController.createLotto.value[inx].num5),
+                                            CommonWidget.createCircle(
+                                                makerController.createLotto
+                                                    .value[inx].num5),
                                             CommonWidget.paddingL5(),
-                                            CommonWidget.createCircle(makerController.createLotto.value[inx].num6),
+                                            CommonWidget.createCircle(
+                                                makerController.createLotto
+                                                    .value[inx].num6),
                                           ],
                                         ),
-                                        Divider(height: 10, color: Colors.black26, thickness: 1,),
-                                        const Padding(padding: EdgeInsets.only(top: 5))
+                                        Divider(
+                                          height: 10,
+                                          color: Colors.black26,
+                                          thickness: 1,
+                                        ),
+                                        const Padding(
+                                            padding: EdgeInsets.only(top: 5))
                                       ],
-                                    )
-                              );
-                            }),
-                        Expanded(child: Align(
-                          alignment: FractionalOffset.bottomCenter,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-                            child: OutlinedButton.icon(
-                                onPressed: () async => Get.back(),
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                  MaterialStateProperty.all(
-                                      Colors.deepPurple),
-                                  fixedSize: MaterialStateProperty.resolveWith((states) => const Size(400.0, 50.0),),
+                                    ));
+                                  }),
+                              Expanded(
+                                  child: Align(
+                                alignment: FractionalOffset.bottomCenter,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10, bottom: 20),
+                                  child: OutlinedButton.icon(
+                                      onPressed: () async => Get.back(),
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Colors.deepPurple),
+                                        fixedSize:
+                                            MaterialStateProperty.resolveWith(
+                                          (states) => const Size(400.0, 50.0),
+                                        ),
+                                      ),
+                                      icon: const Icon(
+                                        Icons.done,
+                                        color: Colors.white,
+                                        size: 25,
+                                      ),
+                                      label: const Text(
+                                        "확인",
+                                        style: TextStyle(color: Colors.white),
+                                      )),
                                 ),
-                                icon: const Icon(
-                                  Icons.done,
-                                  color: Colors.white,
-                                  size: 25,
-                                ),
-                                label: const Text(
-                                  "확인",
-                                  style: TextStyle(color: Colors.white),
-                                )),
+                              ))
+                            ],
                           ),
-                        ))
-                      ],
-                    ),
-                  ),
+                        ),
                 )),
           );
         });
@@ -226,8 +247,9 @@ class Maker extends GetView<MakerController> {
                   margin: EdgeInsets.only(left: 15, right: 15),
                   padding: EdgeInsets.only(top: 10, bottom: 10),
                   decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                     color: Colors.white,
-                    border: Border.all(color: Colors.black, width: 1),
+                    border: Border.all(color: Colors.black45, width: 1),
                   ),
                   alignment: Alignment.center,
                   child: Wrap(

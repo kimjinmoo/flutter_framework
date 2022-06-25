@@ -1,3 +1,4 @@
+import 'package:lotto/pages/account/domain/entity/user_model.dart';
 import 'package:lotto/pages/account/presentation/controllers/auth_controller.dart';
 import 'package:lotto/pages/home/domain/entity/commands_model.dart';
 import 'package:lotto/pages/home/presentation/controllers/home_controller.dart';
@@ -23,9 +24,7 @@ class Home extends StatelessWidget {
   ///
   void _showBottomSheet(BuildContext context, HomeController controller) {
     const errMsg = SnackBar(
-        backgroundColor: Colors.red,
-        content: Text('사용할수 없는 단어가 포함되어 있습니다.')
-    );
+        backgroundColor: Colors.red, content: Text('사용할수 없는 단어가 포함되어 있습니다.'));
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -66,15 +65,17 @@ class Home extends StatelessWidget {
                                   ? null
                                   : InkWell(
                                       onTap: () => {
-                                        if(!isBlackListCheck(controller.commentController.text)) {
-                                          controller.addComment(),
-                                          Get.back()
-                                        } else {
-                                          controller.clear(),
-                                          Get.back(),
-                                          HapticFeedback.heavyImpact(),
-                                          ScaffoldMessenger.of(context).showSnackBar(errMsg)
-                                        }
+                                        if (!isBlackListCheck(
+                                            controller.commentController.text))
+                                          {controller.addComment(), Get.back()}
+                                        else
+                                          {
+                                            controller.clear(),
+                                            Get.back(),
+                                            HapticFeedback.heavyImpact(),
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(errMsg)
+                                          }
                                       },
                                       child: const FaIcon(
                                         FontAwesomeIcons.pencil,
@@ -197,10 +198,10 @@ class Home extends StatelessWidget {
                         onPressed: controller.isProgress.value
                             ? null
                             : () {
-                          controller.toPreviousRound().onError(
-                                  (error, stackTrace) =>
-                                  Get.snackbar("안내", error.toString()));
-                        },
+                                controller.toPreviousRound().onError(
+                                    (error, stackTrace) =>
+                                        Get.snackbar("안내", error.toString()));
+                              },
                         icon: const FaIcon(FontAwesomeIcons.angleLeft)),
                     Expanded(
                         flex: 1,
@@ -214,17 +215,17 @@ class Home extends StatelessWidget {
                         )),
                     controller.winningNumberInfo.value != null
                         ? IconButton(
-                        onPressed: controller.isProgress.value
-                            ? null
-                            : () {
-                          controller.toNextRound().onError(
-                                  (error, stackTrace) =>
-                                  HapticFeedback.heavyImpact());
-                        },
-                        icon: const FaIcon(FontAwesomeIcons.angleRight))
+                            onPressed: controller.isProgress.value
+                                ? null
+                                : () {
+                                    controller.toNextRound().onError(
+                                        (error, stackTrace) =>
+                                            HapticFeedback.heavyImpact());
+                                  },
+                            icon: const FaIcon(FontAwesomeIcons.angleRight))
                         : const IconButton(
-                        onPressed: null,
-                        icon: FaIcon(FontAwesomeIcons.angleRight))
+                            onPressed: null,
+                            icon: FaIcon(FontAwesomeIcons.angleRight))
                   ],
                 ),
                 Align(
@@ -269,41 +270,22 @@ class Home extends StatelessWidget {
                     fit: FlexFit.tight,
                     flex: 1,
                     child: SingleChildScrollView(
-                      child: StreamBuilder<QuerySnapshot<CommandsModel>>(
-                        stream: getFirebaseInstance(
-                            CommandsQuery.createDateDesc,
-                            controller.currentRound.value),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Center(
-                              child: Text(snapshot.error.toString()),
-                            );
-                          }
-                          if (!snapshot.hasData) {
-                            return SizedBox();
-                          }
-
-                          final data = snapshot.requireData;
-
-                          return data.size > 0
-                              ? ListView.builder(
-                            physics:
-                            const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: data.size,
-                            itemBuilder: (context, index) {
-                              return _CommandItem(
-                                model: data.docs[index].data(),
-                                reference: data.docs[index].reference,
-                                isOwner: data.docs[index]
-                                    .data()
-                                    .userId ==
-                                    authController.user.value.userId,
-                              );
-                            },
-                          )
-                              : const Center(
-                            child: Text("댓글을 달아보세요."),
+                      child: ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          CommandsModel fakeModel = CommandsModel(
+                              userId: "test",
+                              userName: "test",
+                              command: "test",
+                              isReport: "test",
+                              round: 0,
+                              regDate: Timestamp.now());
+                          return _CommandItem(
+                            model: fakeModel,
+                            reference: null,
+                            isOwner: false,
                           );
                         },
                       ),
@@ -320,8 +302,7 @@ class Home extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     padding: const EdgeInsets.only(left: 10),
                     height: 25,
-                    child: Text(
-                        "${controller.currentRound.value} 회차 당첨번호",
+                    child: Text("${controller.currentRound.value} 회차 당첨번호",
                         style: contentsTitle),
                   ),
                   controller.nextRound.value != controller.currentRound.value
@@ -353,56 +334,55 @@ class Home extends StatelessWidget {
                       onPressed: controller.isProgress.value
                           ? null
                           : () {
-                        controller.toPreviousRound().onError(
-                                (error, stackTrace) =>
-                                Get.snackbar("안내", error.toString()));
-                      },
+                              controller.toPreviousRound().onError(
+                                  (error, stackTrace) =>
+                                      Get.snackbar("안내", error.toString()));
+                            },
                       icon: const FaIcon(FontAwesomeIcons.angleLeft)),
                   Expanded(
                       flex: 1,
                       child: Container(
                         alignment: Alignment.center,
-                        child: controller.winningNumberInfo.value !=
-                            null
+                        child: controller.winningNumberInfo.value != null
                             ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CommonWidget.createCircle(
-                                controller.winningNumberInfo.value?.num1),
-                            CommonWidget.createCircle(
-                                controller.winningNumberInfo.value?.num2),
-                            CommonWidget.createCircle(
-                                controller.winningNumberInfo.value?.num3),
-                            CommonWidget.createCircle(
-                                controller.winningNumberInfo.value?.num4),
-                            CommonWidget.createCircle(
-                                controller.winningNumberInfo.value?.num5),
-                            CommonWidget.createCircle(
-                                controller.winningNumberInfo.value?.num6),
-                            Text("+"),
-                            CommonWidget.createCircle(controller
-                                .winningNumberInfo.value?.numEx),
-                          ],
-                        )
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CommonWidget.createCircle(
+                                      controller.winningNumberInfo.value?.num1),
+                                  CommonWidget.createCircle(
+                                      controller.winningNumberInfo.value?.num2),
+                                  CommonWidget.createCircle(
+                                      controller.winningNumberInfo.value?.num3),
+                                  CommonWidget.createCircle(
+                                      controller.winningNumberInfo.value?.num4),
+                                  CommonWidget.createCircle(
+                                      controller.winningNumberInfo.value?.num5),
+                                  CommonWidget.createCircle(
+                                      controller.winningNumberInfo.value?.num6),
+                                  Text("+"),
+                                  CommonWidget.createCircle(controller
+                                      .winningNumberInfo.value?.numEx),
+                                ],
+                              )
                             : Text(
-                          "이번주 발표",
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black54,
-                              fontSize: 21),
-                        ),
+                                "이번주 발표",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                    fontSize: 21),
+                              ),
                         height: 40,
                       )),
                   IconButton(
                       onPressed: (controller.isProgress.value ||
-                          controller.winningNumberInfo.value == null)
+                              controller.winningNumberInfo.value == null)
                           ? null
                           : () {
-                        controller.toNextRound().onError(
-                                (error, stackTrace) =>
-                                HapticFeedback.heavyImpact());
-                      },
+                              controller.toNextRound().onError(
+                                  (error, stackTrace) =>
+                                      HapticFeedback.heavyImpact());
+                            },
                       icon: const FaIcon(FontAwesomeIcons.angleRight))
                 ],
               ),
@@ -512,13 +492,13 @@ class Home extends StatelessWidget {
               controller.isAdError.value
                   ? SizedBox()
                   : Container(
-                padding: EdgeInsets.only(top: 5, bottom: 5),
-                alignment: Alignment.center,
-                height: bannerAd.size.height.toDouble(),
-                width: bannerAd.size.width.toDouble(),
-                color: Colors.grey.shade300,
-                child: AdWidget(ad: bannerAd),
-              ),
+                      padding: EdgeInsets.only(top: 5, bottom: 5),
+                      alignment: Alignment.center,
+                      height: bannerAd.size.height.toDouble(),
+                      width: bannerAd.size.width.toDouble(),
+                      color: Colors.grey.shade300,
+                      child: AdWidget(ad: bannerAd),
+                    ),
               const SizedBox(
                 height: 10,
               ),
@@ -546,8 +526,7 @@ class Home extends StatelessWidget {
                   flex: 1,
                   child: SingleChildScrollView(
                     child: StreamBuilder<QuerySnapshot<CommandsModel>>(
-                      stream: getFirebaseInstance(
-                          CommandsQuery.createDateDesc,
+                      stream: getFirebaseInstance(CommandsQuery.createDateDesc,
                           controller.currentRound.value),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
@@ -563,28 +542,24 @@ class Home extends StatelessWidget {
 
                         return data.size > 0
                             ? ListView.builder(
-                          physics:
-                          const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: data.size,
-                          itemBuilder: (context, index) {
-                            return _CommandItem(
-                              model: data.docs[index].data(),
-                              reference: data.docs[index].reference,
-                              isOwner: data.docs[index]
-                                  .data()
-                                  .userId ==
-                                  authController.user.value.userId,
-                            );
-                          },
-                        )
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: data.size,
+                                itemBuilder: (context, index) {
+                                  return _CommandItem(
+                                    model: data.docs[index].data(),
+                                    reference: data.docs[index].reference,
+                                    isOwner: data.docs[index].data().userId ==
+                                        authController.user.value.userId,
+                                  );
+                                },
+                              )
                             : const Center(
-                          child: Text("댓글을 달아보세요."),
-                        );
+                                child: Text("댓글을 달아보세요."),
+                              );
                       },
                     ),
-                  )
-              ),
+                  )),
             ],
           );
   }
@@ -602,7 +577,7 @@ class _CommandItem extends GetView<HomeController> {
   final CommandsModel model;
 
   // 댓글 화이어베이스 객체
-  final DocumentReference<CommandsModel> reference;
+  final DocumentReference<CommandsModel>? reference;
 
   @override
   Widget build(BuildContext context) {
@@ -623,176 +598,409 @@ class _CommandItem extends GetView<HomeController> {
               maxHeight: double.infinity,
             ),
             margin: const EdgeInsets.only(right: 16, left: 16),
-            child: ListView(
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.only(top: 20),
-              shrinkWrap: true,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: FutureBuilder<UserModel?>(
+              future: getUser(model.userId),
+              builder: (conx, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  // 유저 데이터
+                  UserModel user = snapshot.data ??
+                      UserModel(
+                          userId: "test",
+                          userName: "test",
+                          regDate: Timestamp.now(),
+                          maxRank: 0);
+                  return ListView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.only(top: 20),
+                    shrinkWrap: true,
                     children: [
-                      Text.rich(
-                        TextSpan(
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            WidgetSpan(
-                              child: Container(
-                                margin: EdgeInsets.only(right: 4.0),
-                                width: 19,
-                                height: 19,
-                                decoration: new BoxDecoration(
-                                    color: Colors.black87,
-                                    border: new Border.all(
-                                      color: Colors.black,
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20))),
-                                child: Center(
-                                  child: Text(
-                                    model.userName.substring(0, 1),
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            TextSpan(
-                              text: model.userName,
-                              style: GoogleFonts.notoSans(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87),
-                            )
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                          flex: 1,
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: Text(TimeUtils.timeAgo(
-                                milliseconds:
-                                    model.regDate.millisecondsSinceEpoch)),
-                          )),
-                    ],
-                  ),
-                ),
-                Text(
-                  model.command,
-                  style:
-                      GoogleFonts.notoSans(fontSize: 16, color: Colors.black54),
-                  textAlign: TextAlign.left,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 10, top: 10),
-                  height: 20,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text.rich(
-                        TextSpan(
-                          style: Theme.of(context).textTheme.button,
-                          children: [
-                            isOwner
-                                ? WidgetSpan(
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  WidgetSpan(
                                     child: Container(
-                                      padding:
-                                          const EdgeInsets.only(right: 2.0),
-                                      child: InkWell(
-                                        onTap: () {
-                                          Get.dialog(AlertDialog(
-                                            title: const Text(
-                                              "경고",
-                                              style:
-                                                  TextStyle(color: Colors.red),
-                                            ),
-                                            content: const Text("삭제하시겠습니까?"),
-                                            actions: [
-                                              TextButton(
-                                                  onPressed: () async => {
-                                                        await controller
-                                                            .removeComment(
-                                                                reference.id),
-                                                        Get.back()
-                                                      },
-                                                  child: const Text(
-                                                    "삭제",
-                                                    style: TextStyle(
-                                                        color: Colors.red,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  )),
-                                              TextButton(
-                                                  onPressed: () => Get.back(),
-                                                  child: const Text(
-                                                    "취소",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  )),
-                                            ],
-                                          ));
-                                        },
-                                        child: const Icon(
-                                          Icons.delete,
-                                          size: 25.0,
-                                          color: Colors.red,
+                                      margin: EdgeInsets.only(right: 4.0),
+                                      width: 19,
+                                      height: 19,
+                                      decoration: new BoxDecoration(
+                                          color: Colors.black87,
+                                          border: new Border.all(
+                                            color: Colors.black,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20))),
+                                      child: Center(
+                                        child: Text(
+                                          user.userName.substring(0, 1),
+                                          style: TextStyle(color: Colors.white),
                                         ),
                                       ),
                                     ),
+                                  ),
+                                  TextSpan(
+                                    text: user.userName,
+                                    style: GoogleFonts.notoSans(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black87),
                                   )
-                                : const WidgetSpan(child: SizedBox()),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                                flex: 1,
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(TimeUtils.timeAgo(
+                                      milliseconds: model
+                                          .regDate.millisecondsSinceEpoch)),
+                                )),
                           ],
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          Get.dialog(AlertDialog(
-                            title: Text(
-                              "신고하기",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            content: Text(
-                                "폭언,욕설등 문제 있는 내용이 포함되었나요?\n신고하시겠습니까?"),
-                            actions: [
-                              TextButton(
-                                  onPressed: () async {
-                                    await reportComment(reference.id);
-                                    Get.back();
-                                  },
-                                  child: Text(
-                                    "확인",
-                                    style: TextStyle(
-                                        color: Colors.red,
-                                        fontWeight:
-                                        FontWeight.bold),
-                                  )),
-                              TextButton(
-                                  onPressed: () {
-                                    Get.back();
-                                  },
-                                  child: Text("취소",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight:
-                                          FontWeight.bold))),
-                            ],
-                          )
-                          );
-                        },
-                        child: Text("신고하기"),
-                      )
+                      Text(
+                        model.command,
+                        style: GoogleFonts.notoSans(
+                            fontSize: 16, color: Colors.black54),
+                        textAlign: TextAlign.left,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Divider(),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 10, top: 10),
+                        height: 20,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text.rich(TextSpan(children: [
+                              WidgetSpan(
+                                  child: Container(
+                                padding: EdgeInsets.only(right: 5),
+                                child: FaIcon(
+                                  FontAwesomeIcons.crown,
+                                  size: 18,
+                                  color: Colors.orange,
+                                ),
+                              )),
+                              TextSpan(
+                                  text: user.maxRank == 0
+                                      ? "당첨 경험 없음"
+                                      : "${user.maxRank}등 경험",
+                                  style: TextStyle(color: Colors.black54))
+                            ])),
+                            Expanded(child: SizedBox()),
+                            isOwner
+                                ? Text.rich(
+                                    TextSpan(
+                                      style: Theme.of(context).textTheme.button,
+                                      children: [
+                                        isOwner
+                                            ? WidgetSpan(
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 2.0),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      Get.dialog(AlertDialog(
+                                                        title: const Text(
+                                                          "경고",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.red),
+                                                        ),
+                                                        content: const Text(
+                                                            "삭제하시겠습니까?"),
+                                                        actions: [
+                                                          TextButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                final reference =
+                                                                    this.reference;
+                                                                if (reference !=
+                                                                    null) {
+                                                                  await controller
+                                                                      .removeComment(
+                                                                          reference
+                                                                              .id);
+                                                                }
+                                                                Get.back();
+                                                              },
+                                                              child: const Text(
+                                                                "삭제",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .red,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              )),
+                                                          TextButton(
+                                                              onPressed: () =>
+                                                                  Get.back(),
+                                                              child: const Text(
+                                                                "취소",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              )),
+                                                        ],
+                                                      ));
+                                                    },
+                                                    child: const Icon(
+                                                      Icons.delete,
+                                                      size: 25.0,
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            : const WidgetSpan(
+                                                child: SizedBox()),
+                                      ],
+                                    ),
+                                  )
+                                : InkWell(
+                                    onTap: () {
+                                      Get.dialog(AlertDialog(
+                                        title: const Text(
+                                          "신고하기",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        content: const Text(
+                                            "폭언,욕설등 문제 있는 내용이 포함되었나요?\n신고하시겠습니까?"),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () async {
+                                                final reference =
+                                                    this.reference;
+                                                if (reference != null) {
+                                                  await reportComment(
+                                                      reference.id);
+                                                }
+                                                Get.back();
+                                              },
+                                              child: const Text(
+                                                "확인",
+                                                style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )),
+                                          TextButton(
+                                              onPressed: () {
+                                                Get.back();
+                                              },
+                                              child: const Text("취소",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold))),
+                                        ],
+                                      ));
+                                    },
+                                    child: const Text("신고하기"),
+                                  ),
+                          ],
+                        ),
+                      ),
                     ],
-                  ),
-                ),
-              ],
+                  );
+                } else {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    enabled: true,
+                    child: ListView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.only(top: 20),
+                      shrinkWrap: true,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    WidgetSpan(
+                                      child: Container(
+                                        margin: EdgeInsets.only(right: 4.0),
+                                        width: 19,
+                                        height: 19,
+                                        decoration: new BoxDecoration(
+                                            color: Colors.black87,
+                                            border: new Border.all(
+                                              color: Colors.black,
+                                            ),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20))),
+                                        child: Center(
+                                          child: Text(
+                                            model.userName.substring(0, 1),
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: model.userName,
+                                      style: GoogleFonts.notoSans(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black87),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                  flex: 1,
+                                  child: Align(
+                                    alignment: Alignment.topRight,
+                                    child: Text(TimeUtils.timeAgo(
+                                        milliseconds: model
+                                            .regDate.millisecondsSinceEpoch)),
+                                  )),
+                            ],
+                          ),
+                        ),
+                        Text(
+                          model.command,
+                          style: GoogleFonts.notoSans(
+                              fontSize: 16, color: Colors.black54),
+                          textAlign: TextAlign.left,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: Divider(),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 10, top: 10),
+                          height: 20,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text.rich(
+                                TextSpan(
+                                  style: Theme.of(context).textTheme.button,
+                                  children: [
+                                    isOwner
+                                        ? WidgetSpan(
+                                            child: Container(
+                                              padding: const EdgeInsets.only(
+                                                  right: 2.0),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  Get.dialog(AlertDialog(
+                                                    title: const Text(
+                                                      "경고",
+                                                      style: TextStyle(
+                                                          color: Colors.red),
+                                                    ),
+                                                    content:
+                                                        const Text("삭제하시겠습니까?"),
+                                                    actions: [
+                                                      TextButton(
+                                                          onPressed: () async =>
+                                                              {Get.back()},
+                                                          child: const Text(
+                                                            "삭제",
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.red,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          )),
+                                                      TextButton(
+                                                          onPressed: () =>
+                                                              Get.back(),
+                                                          child: const Text(
+                                                            "취소",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          )),
+                                                    ],
+                                                  ));
+                                                },
+                                                child: const Icon(
+                                                  Icons.delete,
+                                                  size: 25.0,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : const WidgetSpan(child: SizedBox()),
+                                  ],
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Get.dialog(AlertDialog(
+                                    title: const Text(
+                                      "신고하기",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    content: const Text(
+                                        "폭언,욕설등 문제 있는 내용이 포함되었나요?\n신고하시겠습니까?"),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () async {
+                                            Get.back();
+                                          },
+                                          child: const Text(
+                                            "확인",
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.bold),
+                                          )),
+                                      TextButton(
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                          child: const Text("취소",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight:
+                                                      FontWeight.bold))),
+                                    ],
+                                  ));
+                                },
+                                child: const Text("신고하기"),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 5,
         )
       ],

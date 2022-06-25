@@ -13,6 +13,7 @@ class UserLottoModel {
       {required this.userId,
       required this.round,
       required this.numbers,
+      required this.maxRank,
       required this.regDate});
 
   // 유저 ID
@@ -27,6 +28,8 @@ class UserLottoModel {
   // 등록일
   final Timestamp regDate;
 
+  final int maxRank;
+
   // Redirecting 생성자를 통해 생성
   UserLottoModel.fromJson(Map<String, Object?> json)
       : this(
@@ -35,6 +38,7 @@ class UserLottoModel {
           numbers: (json['numbers']! as List)
               .map((i) => MyLottoNumber.fromJson(i))
               .toList(),
+          maxRank: (json['maxRank']??0) as int,
           regDate: json['regDate']! as Timestamp,
         );
 
@@ -43,6 +47,7 @@ class UserLottoModel {
       'userId': userId,
       'round': round,
       'numbers': numbers.map((e) => e.toJson()).toList(),
+      'maxRank': maxRank,
       'regDate': regDate
     };
   }

@@ -51,8 +51,7 @@ class HomeController extends GetxController {
   RxBool isError = false.obs;
 
   // 내 데이터
-  Rx<UserLottoModel> myLottoHistory = Rx<UserLottoModel>(UserLottoModel(
-      numbers: [], round: 0, regDate: Timestamp.now(), userId: ""));
+  Rx<UserLottoModel> myLottoHistory = Rx<UserLottoModel>(UserLottoModel(numbers: [], round: 0, regDate: Timestamp.now(), userId: "", maxRank: 0));
 
   @override
   void onInit() async {
@@ -271,17 +270,22 @@ class HomeController extends GetxController {
     // 등수
     switch (match.length) {
       case 6:
+        authController.changeUserRank(1);
         return Rank("1등", 1);
       case 5:
         if (winningNumberInfo.value?.numEx != null &&
             numbers.contains(winningNumberInfo.value?.numEx)) {
+          authController.changeUserRank(2);
           return Rank("2등", 2);
         } else {
+          authController.changeUserRank(3);
           return Rank("3등", 3);
         }
       case 4:
+        authController.changeUserRank(4);
         return Rank("4등", 4);
       case 3:
+        authController.changeUserRank(5);
         return Rank("5등", 5);
     }
     return Rank("꽝", -1);

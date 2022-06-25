@@ -9,7 +9,7 @@ import 'package:uuid/uuid.dart';
 
 class AuthController extends GetxController {
   // 기본 유저 모델
-  Rx<UserModel> user = UserModel(userId: "", userName: "", regDate: Timestamp.now()).obs;
+  Rx<UserModel> user = UserModel(userId: "", userName: "", regDate: Timestamp.now(), maxRank: 0).obs;
   // 유저명
   RxString userName = "".obs;
   // 프로그레스 true : 처리중, false : 처리완료
@@ -38,7 +38,7 @@ class AuthController extends GetxController {
     UserModel? userModel = await getUser(userKey);
     if (userModel == null) {
       userModel = UserModel(
-          userId: userKey, userName: getNickName(), regDate: Timestamp.now());
+          userId: userKey, userName: getNickName(), regDate: Timestamp.now(), maxRank: 0);
       addUser(userModel);
     }
     // 로그인 처리
@@ -60,5 +60,14 @@ class AuthController extends GetxController {
       this.userName.value = updatedUser.userName;
       isProgress.value = false;
     }
+  }
+
+  /// 유저명을 업데이트 한다.
+  Future<void> changeUserRank(int maxRank) async {
+    isProgress.value = true;
+    UserModel updatedUser = await updateUserMaxRank(user.value.userId, maxRank);
+    // 유저명 업데이트
+    user.value = updatedUser;
+    isProgress.value = false;
   }
 }
