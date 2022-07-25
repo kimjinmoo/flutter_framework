@@ -19,11 +19,10 @@ import 'package:get/get.dart';
 /// 홈 기능을 제공한다.
 ///
 class HomeController extends GetxController {
-  AuthController authController = Get.find();
+  AuthController _authController = Get.find();
 
   // 프로그레스 true : 처리중, false : 처리완료
   RxBool isProgress = false.obs;
-  RxBool isAdError = false.obs;
 
   // 코맨트 컨트럴
   final commentFormKey = GlobalKey<FormState>();
@@ -147,7 +146,7 @@ class HomeController extends GetxController {
   ///
   Future<void> fetchMyCurrentRoundLottoHistory() async {
     myLottoHistory.value = await fetchMyLotto(
-        currentRound.value, authController.user.value.userId);
+        currentRound.value, _authController.user.value.userId);
   }
 
   ///
@@ -212,11 +211,6 @@ class HomeController extends GetxController {
     tempRoundCode.value = round;
   }
 
-  // 광고 에러 여부
-  void setIsAdError(bool isError) {
-    isAdError.value = isError;
-  }
-
   // 코맨트 글을 클리어한다.
   clear() => commentController.clear();
 
@@ -226,8 +220,8 @@ class HomeController extends GetxController {
   Future<void> addComment() async {
     // 코맨트를 초기화한다.
     await addCommand(CommandsModel(
-            userId: authController.user.value.userId,
-            userName: authController.user.value.userName,
+            userId: _authController.user.value.userId,
+            userName: _authController.user.value.userName,
             command: commentController.text,
             isReport: "N",
             round: currentRound.value,
@@ -270,22 +264,22 @@ class HomeController extends GetxController {
     // 등수
     switch (match.length) {
       case 6:
-        authController.changeUserRank(1);
+        _authController.changeUserRank(1);
         return Rank("1등", 1);
       case 5:
         if (winningNumberInfo.value?.numEx != null &&
             numbers.contains(winningNumberInfo.value?.numEx)) {
-          authController.changeUserRank(2);
+          _authController.changeUserRank(2);
           return Rank("2등", 2);
         } else {
-          authController.changeUserRank(3);
+          _authController.changeUserRank(3);
           return Rank("3등", 3);
         }
       case 4:
-        authController.changeUserRank(4);
+        _authController.changeUserRank(4);
         return Rank("4등", 4);
       case 3:
-        authController.changeUserRank(5);
+        _authController.changeUserRank(5);
         return Rank("5등", 5);
     }
     return Rank("꽝", -1);

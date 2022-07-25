@@ -102,9 +102,16 @@ class Home extends StatelessWidget {
 
   // 컨텐츠 타이틀
   TextStyle contentsTitle = GoogleFonts.notoSans(
-    fontSize: 18,
+    fontSize: 19,
     color: Colors.black87,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.bold,
+  );
+
+  // 강조
+  TextStyle contentsRedTitle = GoogleFonts.notoSans(
+    fontSize: 19,
+    color: Colors.red,
+    fontWeight: FontWeight.bold,
   );
 
   ///
@@ -124,33 +131,6 @@ class Home extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
-    // 광고 리스터 생성
-    final BannerAdListener listener = BannerAdListener(
-      // Called when an ad is successfully received.
-      onAdLoaded: (Ad ad) => controller.setIsAdError(false),
-      // Called when an ad request failed.
-      onAdFailedToLoad: (Ad ad, LoadAdError error) {
-        // Dispose the ad here to free resources
-        ad.dispose();
-        controller.setIsAdError(true);
-      },
-      // Called when an ad opens an overlay that covers the screen.
-      onAdOpened: (Ad ad) => print('Ad opened.'),
-      // Called when an ad removes an overlay that covers the screen.
-      onAdClosed: (Ad ad) => print('Ad closed.'),
-      // Called when an impression occurs on the ad.
-      onAdImpression: (Ad ad) => print('Ad impression.'),
-    );
-    // Admob 광고
-    BannerAd _bannerAd = BannerAd(
-      adUnitId: adUnitId(),
-      size: AdSize.banner,
-      request: const AdRequest(),
-      listener: listener,
-    );
-    // 광고 로딩
-    _bannerAd.load();
-
     return Scaffold(
         resizeToAvoidBottomInset: false,
         // count가 변경 될 때마다 Obx(()=> 를 사용하여 Text()에 업데이트합니다.
@@ -158,7 +138,7 @@ class Home extends StatelessWidget {
         body: SafeArea(
           child: !controller.isError.value
               ? Obx(() => authController.user.value.isLogin
-                  ? list(context, authController, controller, _bannerAd)
+                  ? list(context, authController, controller)
                   : SizedBox())
               : Container(
                   child: Text("네트워크에 문제가 있습니다."),
@@ -166,8 +146,8 @@ class Home extends StatelessWidget {
         ));
   }
 
-  Widget list(context, AuthController authController, HomeController controller,
-      BannerAd bannerAd) {
+  Widget list(
+      context, AuthController authController, HomeController controller) {
     return controller.isProgress.value
         ? Shimmer.fromColors(
             baseColor: Colors.grey.shade300,
@@ -302,8 +282,12 @@ class Home extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     padding: const EdgeInsets.only(left: 10),
                     height: 25,
-                    child: Text("${controller.currentRound.value} 회차 당첨번호",
-                        style: contentsTitle),
+                    child: Text.rich(TextSpan(
+                        text: "${controller.currentRound.value}",
+                        style: contentsRedTitle,
+                        children: [
+                          TextSpan(text: "회차 당첨번호", style: contentsTitle)
+                        ])),
                   ),
                   controller.nextRound.value != controller.currentRound.value
                       ? Expanded(
@@ -318,7 +302,7 @@ class Home extends StatelessWidget {
                                 alignment: Alignment.topRight,
                                 child: Icon(
                                   Icons.home_filled,
-                                  size: 20,
+                                  size: 22,
                                   color: Colors.blue,
                                 ),
                               ),
@@ -390,6 +374,7 @@ class Home extends StatelessWidget {
                 data: Theme.of(context)
                     .copyWith(dividerColor: Colors.transparent),
                 child: ExpansionTile(
+                  initiallyExpanded: true,
                   title: Row(
                     children: [
                       Padding(
@@ -482,25 +467,27 @@ class Home extends StatelessWidget {
                               width: double.infinity,
                               height: 70,
                               child: Center(
-                                child: Text("발표 대기"),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("발표 대기"),
+                                    Text.rich(TextSpan(
+                                        text: "발표당일 등수 계산으로 ",
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text: "1~2시간 지연 ",
+                                              style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.bold)),
+                                          TextSpan(text: "됩니다.")
+                                        ]))
+                                  ],
+                                ),
                               ),
                             ),
                     )
                   ],
                 ),
-              ),
-              controller.isAdError.value
-                  ? SizedBox()
-                  : Container(
-                      padding: EdgeInsets.only(top: 5, bottom: 5),
-                      alignment: Alignment.center,
-                      height: bannerAd.size.height.toDouble(),
-                      width: bannerAd.size.width.toDouble(),
-                      color: Colors.grey.shade300,
-                      child: AdWidget(ad: bannerAd),
-                    ),
-              const SizedBox(
-                height: 10,
               ),
               InkWell(
                 child: SizedBox(

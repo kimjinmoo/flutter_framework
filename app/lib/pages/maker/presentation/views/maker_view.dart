@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lotto/pages/home/presentation/controllers/home_controller.dart';
 import 'package:lotto/pages/maker/presentation/controllers/maker_controller.dart';
 import 'package:lotto/ui/common_widget.dart';
@@ -10,6 +11,21 @@ import 'package:url_launcher/url_launcher.dart';
 /// 로또번호를 생성한다.
 ///
 class Maker extends GetView<MakerController> {
+  Widget _adView(MakerController controller) {
+    BannerAd? bannerAd = controller.bannerAd;
+    if (bannerAd != null) {
+      return Container(
+        padding: EdgeInsets.only(top: 5, bottom: 5),
+        alignment: Alignment.center,
+        height: controller.bannerAd?.size.height.toDouble(),
+        width: controller.bannerAd?.size.width.toDouble(),
+        color: Colors.grey.shade300,
+        child: AdWidget(ad: bannerAd),
+      );
+    }
+    return SizedBox();
+  }
+
   // 뽑기 하단 sheet
   void _showBottomSheet(BuildContext context, HomeController homeController,
       MakerController makerController) {
@@ -52,6 +68,12 @@ class Maker extends GetView<MakerController> {
                                 "AI 번호 생성",
                                 style: TextStyle(
                                     fontSize: 25, fontWeight: FontWeight.bold),
+                              ),
+                              makerController.isAdError.value
+                                  ? SizedBox()
+                                  : _adView(makerController),
+                              const SizedBox(
+                                height: 10,
                               ),
                               Divider(
                                 height: 10,

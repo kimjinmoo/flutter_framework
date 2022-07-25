@@ -26,88 +26,100 @@ class LandingView extends GetView<LandingController> {
   final TextStyle selectedLabelStyle =
       TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 12);
 
-  buildBottomNavigationMenu(context, ladingController, homeController, makerController) {
+  buildBottomNavigationMenu(
+      context, ladingController, homeController, makerController) {
     return Obx(() => BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      showUnselectedLabels: true,
-      showSelectedLabels: true,
-      onTap: ladingController.changeTabIndex,
-      currentIndex: ladingController.tabIndex.value,
-      // backgroundColor: Color.fromRGBO(69, 69, 69, 1.0),
-      unselectedItemColor: Colors.grey,
-      selectedItemColor: Colors.red,
-      unselectedLabelStyle: unselectedLabelStyle,
-      selectedLabelStyle: selectedLabelStyle,
-      items: [
-        BottomNavigationBarItem(
-          icon: Container(
-            margin: EdgeInsets.only(bottom: 7),
-            child: Icon(
-              Icons.home,
-              size: 20.0,
+          type: BottomNavigationBarType.fixed,
+          showUnselectedLabels: true,
+          showSelectedLabels: true,
+          onTap: ladingController.changeTabIndex,
+          currentIndex: ladingController.tabIndex.value,
+          // backgroundColor: Color.fromRGBO(69, 69, 69, 1.0),
+          unselectedItemColor: Colors.grey,
+          selectedItemColor: Colors.red,
+          unselectedLabelStyle: unselectedLabelStyle,
+          selectedLabelStyle: selectedLabelStyle,
+          items: [
+            BottomNavigationBarItem(
+              icon: Container(
+                margin: EdgeInsets.only(bottom: 7),
+                child: Icon(
+                  Icons.calendar_today_rounded,
+                  size: 20.0,
+                ),
+              ),
+              label: '확인',
             ),
-          ),
-          label: '당첨',
-        ),
-        BottomNavigationBarItem(
-          icon: Container(
-            margin: EdgeInsets.only(bottom: 7),
-            child: Badge(
-                animationType: BadgeAnimationType.scale,
-                badgeColor: Colors.black,
-                alignment: Alignment.bottomRight,
-                badgeContent: Text(
-                    homeController.myLottoHistory.value.numbers
-                        .isEmpty
-                        ? "0"
-                        : "${homeController.myLottoHistory.value.numbers.length}",
-                    style: TextStyle(color: Colors.white70)),
-                child: const FaIcon(
-                  FontAwesomeIcons.rectangleList,
-                  size: 24,
-                )),
-          ),
-          label: '내 번호',
-        ),
-        BottomNavigationBarItem(
-          icon: Container(
-            height: 50,
-            width: 50,
-            margin: EdgeInsets.only(bottom: 7),
-            child: makerController.isProcess.value?Badge(
-              animationType: BadgeAnimationType.scale,
-              position: BadgePosition.topEnd(top: -5, end: -5),
-              stackFit: StackFit.expand,
-              badgeColor: Color.fromRGBO(87, 87, 87, 1.0),
-              toAnimate: true,
-              badgeContent: Text("...", style: TextStyle(color: Colors.white),),
-              child: const Icon(Icons.add_circle_outlined, size: 50, color: Colors.red,),
-            ):const Icon(Icons.add_circle_outlined, size: 50, color: Colors.red,)
-          ),
-          label: 'AI 번호생성',
-        ),
-        BottomNavigationBarItem(
-          icon: Container(
-            margin: EdgeInsets.only(bottom: 7),
-            child: Icon(
-              Icons.file_open,
-              size: 20.0,
+            BottomNavigationBarItem(
+              icon: Container(
+                margin: EdgeInsets.only(bottom: 7),
+                child: Badge(
+                    animationType: BadgeAnimationType.scale,
+                    badgeColor: Colors.black,
+                    alignment: Alignment.bottomRight,
+                    badgeContent: Text(
+                        homeController.myLottoHistory.value.numbers.isEmpty
+                            ? "0"
+                            : "${homeController.myLottoHistory.value.numbers.length}",
+                        style: TextStyle(color: Colors.white70)),
+                    child: const FaIcon(
+                      FontAwesomeIcons.rectangleList,
+                      size: 24,
+                    )),
+              ),
+              label: '내 번호',
             ),
-          ),
-          label: '정보',
-        ),
-        BottomNavigationBarItem(
-          icon: Container(
-            margin: EdgeInsets.only(bottom: 7),
-            child: Icon(
-              Icons.settings,
-              size: 20.0,
+            BottomNavigationBarItem(
+              icon: Container(
+                  height: 50,
+                  width: 50,
+                  margin: EdgeInsets.only(bottom: 7),
+                  child: makerController.isProcess.value
+                      ? Badge(
+                          animationType: BadgeAnimationType.scale,
+                          position: BadgePosition.topEnd(top: -5, end: -5),
+                          stackFit: StackFit.expand,
+                          badgeColor: Color.fromRGBO(87, 87, 87, 1.0),
+                          toAnimate: true,
+                          badgeContent: Text(
+                            "...",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          child: const Icon(
+                            Icons.add_circle_outlined,
+                            size: 50,
+                            color: Colors.red,
+                          ),
+                        )
+                      : const Icon(
+                          Icons.add_circle_outlined,
+                          size: 50,
+                          color: Colors.red,
+                        )),
+              label: 'AI 번호생성',
             ),
-          ),
-          label: '설정',
-        ),
-      ],
-    ));
+            BottomNavigationBarItem(
+              icon: Container(
+                margin: EdgeInsets.only(bottom: 7),
+                child: Icon(
+                  Icons.file_open,
+                  size: 20.0,
+                ),
+              ),
+              label: '정보',
+            ),
+            BottomNavigationBarItem(
+              icon: Container(
+                margin: EdgeInsets.only(bottom: 7),
+                child: Icon(
+                  Icons.settings,
+                  size: 20.0,
+                ),
+              ),
+              label: '설정',
+            ),
+          ],
+        ));
   }
 
   @override
@@ -118,7 +130,8 @@ class LandingView extends GetView<LandingController> {
     return Scaffold(
         bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(canvasColor: Colors.white),
-          child: buildBottomNavigationMenu(context, controller, homeController, makerController),
+          child: buildBottomNavigationMenu(
+              context, controller, homeController, makerController),
         ),
         body: Obx(
           () => IndexedStack(

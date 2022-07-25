@@ -1,17 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lotto/pages/account/presentation/controllers/auth_controller.dart';
 import 'package:lotto/pages/home/domain/entity/my_lotto_number.dart';
 import 'package:lotto/pages/home/domain/entity/user_lotto_model.dart';
 import 'package:lotto/pages/maker/domain/lotto_number.dart';
 import 'package:lotto/services/api_service.dart';
 import 'package:lotto/services/firebase_service.dart';
+import 'package:lotto/utils/ad_utils.dart';
 
 ///
 /// 번호 생성 컨트롤러
 ///
 class MakerController extends GetxController {
-  AuthController authController = Get.find();
+  AuthController _authController = Get.find();
+
+  // 광고 설정
+  Rxn<BannerAd> _bannerAd = Rxn<BannerAd>();
+
+  // 광고
+  RxBool isAdError = true.obs;
+
+  // 광고 가져오기
+  BannerAd? get bannerAd => _bannerAd.value;
 
   // 번호
   RxSet<int> number = <int>{}.obs;
@@ -28,6 +39,40 @@ class MakerController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    adInit();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd.value?.dispose();
+  }
+
+  void adInit() {
+    // 광고 리스터 생성
+    final BannerAdListener listener = BannerAdListener(
+      // Called when an ad is successfully received.
+      onAdLoaded: (Ad ad) => isAdError.value = false,
+      // Called when an ad request failed.
+      onAdFailedToLoad: (Ad ad, LoadAdError error) {
+        // Dispose the ad here to free resources
+        ad.dispose();
+        isAdError.value = true;
+      },
+      // Called when an ad opens an overlay that covers the screen.
+      onAdOpened: (Ad ad) => print('Ad opened.'),
+      // Called when an ad removes an overlay that covers the screen.
+      onAdClosed: (Ad ad) => print('Ad closed.'),
+      // Called when an impression occurs on the ad.
+      onAdImpression: (Ad ad) => print('Ad impression.'),
+    );
+    // Admob 광고
+    _bannerAd.value = BannerAd(
+        adUnitId: adUnitId(),
+        size: AdSize.banner,
+        request: const AdRequest(),
+        listener: listener);
+    // 광고 로딩
+    _bannerAd.value?.load();
   }
 
   ///
@@ -57,7 +102,6 @@ class MakerController extends GetxController {
     final startDay = DateTime(now.year, now.month, now.day, 20, 30);
     final stopDay = DateTime(now.year, now.month, now.day, 20, 45);
     if (now.weekday == 1 && now.compareTo(startDay) >= 0) {
-      // print(now.compareTo(startDay));
       if (startDay.difference(stopDay).inMinutes > 0) {
         throw Exception("초기화");
         return;
@@ -98,10 +142,10 @@ class MakerController extends GetxController {
         });
         await addMyLotto(
           UserLottoModel(
-            userId: authController.user.value.userId,
+            userId: _authController.user.value.userId,
             round: round,
             numbers: lottoNumbers,
-            maxRank: authController.user.value.maxRank,
+            maxRank: _authController.user.value.maxRank,
             regDate: Timestamp.now(),
           ),
         ).onError((error, stackTrace) => print(error));
@@ -124,7 +168,8 @@ class MakerController extends GetxController {
   Future<void> deleteNumber(int round, int numberIndex) async {
     isProcess.value = true;
     try {
-      await deleteMyLotto(round, authController.user.value.userId, numberIndex);
+      await deleteMyLotto(
+          round, _authController.user.value.userId, numberIndex);
     } catch (e) {
       throw Future.error(e.toString());
     } finally {
