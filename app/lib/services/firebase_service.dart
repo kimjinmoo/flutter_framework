@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:lotto/pages/home/domain/entity/commands_model.dart';
+import 'package:lotto/pages/home/domain/entity/help_service_model.dart';
 import 'package:lotto/pages/home/domain/entity/my_lotto_number.dart';
 import 'package:lotto/pages/home/domain/entity/report_model.dart';
 import 'package:lotto/pages/account/domain/entity/user_model.dart';
@@ -34,6 +35,14 @@ final reportRef = FirebaseFirestore.instance
     .withConverter<ReportModel>(
       fromFirestore: (snapshots, _) => ReportModel.fromJson(snapshots.data()!),
       toFirestore: (command, _) => command.toJson(),
+    );
+
+final helpServiceRef = FirebaseFirestore.instance
+    .collection("help-service")
+    .withConverter<HelpServiceModel>(
+      fromFirestore: (snapshots, _) =>
+          HelpServiceModel.fromJson(snapshots.data()!),
+      toFirestore: (service, _) => service.toJson(),
     );
 
 enum CommandsQuery { createDateAsc, createDateDesc }
@@ -74,8 +83,7 @@ Future<UserModel> updateUserName(String userId, String userName) async {
         userId: userModel.userId,
         userName: userName,
         regDate: userModel.regDate,
-        maxRank: userModel.maxRank
-    );
+        maxRank: userModel.maxRank);
     userRef.doc(user.docs.first.reference.id).set(updatedUserModel);
     // 코맨트명 변경
     QuerySnapshot<CommandsModel> commands =
@@ -153,9 +161,7 @@ Future<void> reportComment(id) async {
 
 // 유저 조회
 Stream<QuerySnapshot<UserModel>> getUserStream(String id) {
-  return userRef
-      .where('userId', isEqualTo: id)
-      .snapshots();
+  return userRef.where('userId', isEqualTo: id).snapshots();
 }
 
 // 유저값을 가져온다.
@@ -228,4 +234,11 @@ Future<void> addMyLotto(UserLottoModel userLottoModel) async {
     // 등록된 번호가 없다면 추가
     await userLottoRef.add(userLottoModel);
   }
+}
+
+///
+/// 헬프 서비스에 등록
+///
+Future<void> reportHelpService(HelpServiceModel helpServiceModel) async {
+  helpServiceRef.add(helpServiceModel).then((value) => print(value));
 }

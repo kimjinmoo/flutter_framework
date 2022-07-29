@@ -35,7 +35,7 @@ class Maker extends GetView<MakerController> {
         backgroundColor: Colors.transparent,
         builder: (context) {
           return FractionallySizedBox(
-            heightFactor: 0.6,
+            heightFactor: 0.7,
             child: Obx(() => Container(
                   color: Colors.white,
                   child: (controller.isProcess.value ||
