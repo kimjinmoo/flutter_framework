@@ -41,7 +41,6 @@ class AuthController extends GetxController {
           userId: userKey, userName: getNickName(), regDate: Timestamp.now(), maxRank: 0, privacyAgreementYn: "N");
       addUser(userModel);
     }
-    print(userModel.toJson());
     // 로그인 처리
     userModel.isLogin = true;
     // 유저
