@@ -42,20 +42,16 @@ dependencies:
   http: ^0.13.4
   flutter_dotenv: ^5.0.2
   badges: ^2.0.3
-  flutter_native_splash: ^2.2.6
+  flutter_native_splash: ^2.2.7
   firebase_core: ^1.20.0
-  cloud_firestore: ^3.4.1
-  firebase_analytics: ^9.1.10
+  cloud_firestore: ^3.4.3
+  firebase_analytics: ^9.3.0
   firebase_crashlytics: ^2.8.6
   uuid: ^3.0.6
   timeago: ^3.2.2
   webview_flutter: ^3.0.4
   intl: ^0.17.0
-  google_mobile_ads:
-    git:
-      url: https://github.com/googleads/googleads-mobile-flutter
-      ref: 356875362ddb2ac2e0056385d2729c093722fb8d
-      path: packages/google_mobile_ads
+  google_mobile_ads: ^2.0.0
   shimmer: ^2.0.0
   url_launcher: ^6.1.5
   package_info_plus: ^1.4.3
