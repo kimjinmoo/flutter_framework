@@ -12,6 +12,7 @@ class UserModel {
     required this.userName,
     required this.regDate,
     required this.maxRank,
+    required this.privacyAgreementYn,
     isLogin,
   });
 
@@ -27,6 +28,9 @@ class UserModel {
   // 최대 당첨 등급
   final int maxRank;
 
+  // 개인정보 동의
+  final String privacyAgreementYn;
+
   bool isLogin = false;
 
   // Redirecting 생성자를 통해 생성
@@ -35,7 +39,8 @@ class UserModel {
             userId: json['userId']! as String,
             userName: json['userName']! as String,
             regDate: json['regDate']! as Timestamp,
-            maxRank: (json['maxRank'] ??= 0) as int
+            maxRank: (json['maxRank'] ??= 0) as int,
+            privacyAgreementYn: (json['privacyAgreementYn'] ??= "N") as String
   );
 
   Map<String, Object?> toJson() {
@@ -43,7 +48,8 @@ class UserModel {
       'userId': userId,
       'userName': userName,
       'regDate': regDate,
-      'maxRank': maxRank
+      'maxRank': maxRank,
+      'privacyAgreementYn': privacyAgreementYn
     };
   }
 }

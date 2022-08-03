@@ -3,6 +3,7 @@ import 'package:lotto/pages/account/presentation/controllers/auth_controller.dar
 import 'package:lotto/pages/home/domain/entity/commands_model.dart';
 import 'package:lotto/pages/home/domain/entity/help_service_model.dart';
 import 'package:lotto/pages/home/presentation/controllers/home_controller.dart';
+import 'package:lotto/pages/home/presentation/controllers/landing_controller.dart';
 import 'package:lotto/services/firebase_service.dart';
 import 'package:lotto/ui/common_widget.dart';
 import 'package:lotto/utils/ad_utils.dart';
@@ -147,6 +148,8 @@ class Home extends StatelessWidget {
     // 컨트롤러
     final AuthController authController = Get.find();
     final HomeController controller = Get.find();
+    final LandingController landingController = Get.find();
+
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
@@ -157,7 +160,7 @@ class Home extends StatelessWidget {
         body: SafeArea(
           child: !controller.isError.value
               ? Obx(() => authController.user.value.isLogin
-                  ? list(context, authController, controller)
+                  ? list(context, authController, controller, landingController)
                   : SizedBox())
               : Container(
                   child: Text("네트워크에 문제가 있습니다."),
@@ -165,8 +168,8 @@ class Home extends StatelessWidget {
         ));
   }
 
-  Widget list(
-      context, AuthController authController, HomeController controller) {
+  Widget list(context, AuthController authController, HomeController controller,
+      LandingController landingController) {
     return controller.isProgress.value
         ? Shimmer.fromColors(
             baseColor: Colors.grey.shade300,
@@ -508,22 +511,47 @@ class Home extends StatelessWidget {
                   ],
                 ),
               ),
-              InkWell(
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 30,
-                  child: ColoredBox(
-                      color: Colors.black87,
-                      child: Center(
-                        child: Text(
-                          "댓글 남기기",
-                          style: GoogleFonts.notoSans(
-                              fontSize: 16, color: Colors.white70),
-                        ),
-                      )),
-                ),
-                onTap: () => {_showBottomCommentSheet(context, controller)},
-              ),
+              Obx(() => InkWell(
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 30,
+                      child: ColoredBox(
+                          color: Colors.black87,
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                authController.user.value.privacyAgreementYn ==
+                                        'N'
+                                    ? const Padding(
+                                        padding: EdgeInsets.only(right: 5),
+                                        child: Icon(
+                                          Icons.lock,
+                                          color: Colors.pink,
+                                          size: 20,
+                                        ))
+                                    : const SizedBox(),
+                                Text(
+                                  "댓글 남기기",
+                                  style: GoogleFonts.notoSans(
+                                      fontSize: 16, color: Colors.white70),
+                                )
+                              ],
+                            ),
+                          )),
+                    ),
+                    onTap: () => {
+                      if (authController.user.value.privacyAgreementYn == 'Y')
+                        {_showBottomCommentSheet(context, controller)}
+                      else
+                        {
+                          landingController.changeTabIndex(4),
+                          Get.snackbar("이용동의 확인",
+                              "유저 정보의 자물쇠 아이콘을\n클릭하여 이용동의 후 이용 가능합니다.",
+                              snackPosition: SnackPosition.TOP)
+                        }
+                    },
+                  )),
               Divider(
                 thickness: 0.5,
                 color: Theme.of(context).disabledColor,
@@ -724,7 +752,8 @@ class _CommandItem extends GetView<HomeController> {
                           userId: "test",
                           userName: "test",
                           regDate: Timestamp.now(),
-                          maxRank: 0);
+                          maxRank: 0,
+                          privacyAgreementYn: "N");
                   return ListView(
                     physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.only(top: 20),

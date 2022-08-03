@@ -83,7 +83,9 @@ Future<UserModel> updateUserName(String userId, String userName) async {
         userId: userModel.userId,
         userName: userName,
         regDate: userModel.regDate,
-        maxRank: userModel.maxRank);
+        maxRank: userModel.maxRank,
+        privacyAgreementYn: userModel.privacyAgreementYn
+    );
     userRef.doc(user.docs.first.reference.id).set(updatedUserModel);
     // 코맨트명 변경
     QuerySnapshot<CommandsModel> commands =
@@ -108,6 +110,31 @@ Future<UserModel> updateUserName(String userId, String userName) async {
 }
 
 ///
+/// 유저를 업데이트한다.
+///
+/// [userId]는 필수값이다.
+Future<UserModel> agreementPolicy(String userId) async {
+  QuerySnapshot<UserModel> user =
+  await userRef.where("userId", isEqualTo: userId).get();
+  if (user.docs.isNotEmpty) {
+    // 유저명 변경
+    UserModel userModel = user.docs.first.data();
+    UserModel updatedUserModel = UserModel(
+        userId: userModel.userId,
+        userName: userModel.userName,
+        regDate: userModel.regDate,
+        maxRank: userModel.maxRank,
+        privacyAgreementYn: "Y"
+    );
+    userRef.doc(user.docs.first.reference.id).set(updatedUserModel);
+    // login 옵션 대응
+    updatedUserModel.isLogin = true;
+    return updatedUserModel;
+  }
+  throw Future.error("없는 유저입니다,");
+}
+
+///
 /// 등록된 Rank을 업데이트 한다.
 ///
 Future<UserModel> updateUserMaxRank(String userId, int maxRank) async {
@@ -123,7 +150,9 @@ Future<UserModel> updateUserMaxRank(String userId, int maxRank) async {
           userId: userModel.userId,
           userName: userModel.userName,
           maxRank: maxRank,
-          regDate: userModel.regDate);
+          regDate: userModel.regDate,
+          privacyAgreementYn: userModel.privacyAgreementYn
+      );
       userRef.doc(user.docs.first.reference.id).set(updatedUserModel);
       // login 옵션 대응
       updatedUserModel.isLogin = true;

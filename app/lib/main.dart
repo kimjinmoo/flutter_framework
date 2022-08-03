@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:lotto/constants/Environment.dart';
@@ -19,46 +20,51 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 void main() async {
-  // 계정 초기화
-  initialize();
-  // 환경 변수를 읽는다.
-  await dotenv.load(fileName: Environment.fileName);
-  // 엔진과 위젯 바인딩으 완료 되기 전까지 대기
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // 광고 초기화
-  MobileAds.instance.initialize();
-  // 스플래시
-  // 지연 완료 후 FlutterNativeSplash.remove() 호출
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await runZonedGuarded(() async {
+    // 계정 초기화
+    initialize();
+    // 환경 변수를 읽는다.
+    await dotenv.load(fileName: Environment.fileName);
+    // 엔진과 위젯 바인딩으 완료 되기 전까지 대기
+    WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+    // 광고 초기화
+    MobileAds.instance.initialize();
+    // 스플래시
+    // 지연 완료 후 FlutterNativeSplash.remove() 호출
+    FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // 파이어베이스 적용
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  // 구글 크래쉬 적용
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+    WidgetsFlutterBinding.ensureInitialized();
+    // 파이어베이스 적용
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    // 구글 크래쉬 적용
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-  // 웹뷰 초기화
-  if(Platform.isAndroid) WebView.platform = AndroidWebView();
+    // 웹뷰 초기화
+    if(Platform.isAndroid) WebView.platform = AndroidWebView();
 
-  // 스크린 모드를 설정한다.
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  runApp(GetMaterialApp(
-    theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
-        )
-    ),
-    darkTheme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
-        )
-    ),
-    debugShowCheckedModeBanner: false,
-    enableLog: true,
-    initialRoute: AppPages.INITIAL,
-    getPages: AppPages.routes,
-  ));
+    // 스크린 모드를 설정한다.
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    runApp(GetMaterialApp(
+      theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            systemOverlayStyle: SystemUiOverlayStyle.dark,
+          )
+      ),
+      darkTheme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            systemOverlayStyle: SystemUiOverlayStyle.dark,
+          )
+      ),
+      debugShowCheckedModeBanner: false,
+      enableLog: true,
+      initialRoute: AppPages.INITIAL,
+      getPages: AppPages.routes,
+    ));
+  }, (error, stackTrace) {
+    FirebaseCrashlytics.instance.recordError(error, stackTrace);
+  });
 }
 
 ///
