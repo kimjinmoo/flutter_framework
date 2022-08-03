@@ -9,6 +9,18 @@ class SettingController extends GetxController {
   // 패키지
   Rxn<PackageInfo> packageInfo = Rxn();
 
+  // 이용 동의
+  RxBool serviceYn = false.obs;
+  // 개인 정보 동의
+  RxBool privacyYn = false.obs;
+
+  void setService(bool serviceYn) {
+    this.serviceYn.value = serviceYn;
+  }
+  void setPrivacy(bool privacyYn) {
+    this.privacyYn.value = privacyYn;
+  }
+
   @override
   void onInit() async {
     super.onInit();

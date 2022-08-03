@@ -11,32 +11,42 @@ import 'package:url_launcher/url_launcher.dart';
 
 class Setting extends GetView<SettingController> {
   // 다이얼로그
-  _showSimpleModalDialog(context, AuthController authController){
+  _showSimpleModalDialog(context, AuthController authController) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             contentPadding: EdgeInsets.zero,
             shape: RoundedRectangleBorder(
-                borderRadius:BorderRadius.circular(20.0)),
+                borderRadius: BorderRadius.circular(20.0)),
             content: Container(
               constraints: BoxConstraints(maxHeight: 145),
               width: 300,
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Padding(padding: EdgeInsets.only(top: 15, bottom: 5), child: Text("서비스 이용동의", style: TextStyle(fontWeight: FontWeight.bold),),),
+                  Padding(
+                    padding: EdgeInsets.only(top: 15, bottom: 5),
+                    child: Text(
+                      "서비스 이용동의",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(child: Row(
+                      Expanded(
+                          child: Row(
                         children: [
-                          Checkbox(value: true, onChanged: (state){}),
+                          Obx(() => Checkbox(
+                              value: controller.serviceYn.value,
+                              onChanged: (state) =>
+                                  controller.setService(state!))),
                           Text("이용약관 동의(필수)"),
                         ],
                       )),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0,0,15.0,0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 15.0, 0),
                         child: Align(
                             alignment: Alignment.centerRight,
                             child: InkWell(
@@ -46,23 +56,25 @@ class Setting extends GetView<SettingController> {
                                     'https://data.grepiu.com/lotto/lotto_terms.html')))
                                   throw '실행할수 없는 URL 입니다.';
                               },
-                             child: Text(">"),
-                            )
-                        ),
+                              child: Text(">"),
+                            )),
                       )
                     ],
                   ),
                   Row(
                     children: [
-                      Expanded(child: Row(
+                      Expanded(
+                          child: Row(
                         children: [
-                          Checkbox(value: true, onChanged: (state){
-                          }),
+                          Obx(() => Checkbox(
+                              value: controller.privacyYn.value,
+                              onChanged: (state) =>
+                                  controller.setPrivacy(state!))),
                           Text("개인정보 수집 이용 동의(필수)"),
                         ],
                       )),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0,0,15.0,0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 15.0, 0),
                         child: Align(
                             alignment: Alignment.centerRight,
                             child: InkWell(
@@ -73,8 +85,7 @@ class Setting extends GetView<SettingController> {
                                   throw '실행할수 없는 URL 입니다.';
                               },
                               child: Text(">"),
-                            )
-                        ),
+                            )),
                       )
                     ],
                   ),
@@ -83,18 +94,33 @@ class Setting extends GetView<SettingController> {
             ),
             actions: [
               ElevatedButton(
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.black26),),
-                  onPressed: (){
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.black26),
+                  ),
+                  onPressed: () {
+                    controller.setService(false);
+                    controller.setPrivacy(false);
                     Get.back();
                   },
                   child: Text("취소")),
-              ElevatedButton(
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurple),),
-                  onPressed: () async {
+              Obx(()=>ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.deepPurple),
+                  ),
+                  onPressed:
+                  controller.serviceYn.value && controller.privacyYn.value
+                      ? () async {
                     await authController.agreementPolicyByUser();
+
+                    controller.setService(false);
+                    controller.setPrivacy(false);
+
                     Get.back();
-                  },
-                  child: Text("확인"))
+                  }
+                      : null,
+                  child: Text("확인")))
             ],
           );
         });
@@ -118,7 +144,7 @@ class Setting extends GetView<SettingController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Obx(()=>Container(
+            Obx(() => Container(
                 decoration: BoxDecoration(color: Colors.white),
                 padding: EdgeInsets.only(top: 10),
                 height: 125,
@@ -135,33 +161,39 @@ class Setting extends GetView<SettingController> {
                           ),
                           IconButton(
                               onPressed: () {
-                                if(authController.user.value.privacyAgreementYn == 'Y') {
+                                if (authController
+                                        .user.value.privacyAgreementYn ==
+                                    'Y') {
                                   Get.toNamed(Routes.ACCOUNT);
                                 } else {
-                                  _showSimpleModalDialog(context, authController);
+                                  _showSimpleModalDialog(
+                                      context, authController);
                                 }
-
                               },
-                              icon: authController.user.value.privacyAgreementYn == 'Y'?const Icon(
-                                Icons.settings,
-                                color: Colors.pink,
-                                size: 20,
-                              ):const Icon(
-                                Icons.lock,
-                                color: Colors.pink,
-                                size: 20,
-                              )),
+                              icon: authController
+                                          .user.value.privacyAgreementYn ==
+                                      'Y'
+                                  ? const Icon(
+                                      Icons.settings,
+                                      color: Colors.pink,
+                                      size: 20,
+                                    )
+                                  : const Icon(
+                                      Icons.lock,
+                                      color: Colors.pink,
+                                      size: 20,
+                                    )),
                         ]),
                     Text.rich(TextSpan(children: [
                       WidgetSpan(
                           child: Container(
-                            padding: EdgeInsets.only(right: 5),
-                            child: FaIcon(
-                              FontAwesomeIcons.crown,
-                              size: 18,
-                              color: Colors.orange,
-                            ),
-                          )),
+                        padding: EdgeInsets.only(right: 5),
+                        child: FaIcon(
+                          FontAwesomeIcons.crown,
+                          size: 18,
+                          color: Colors.orange,
+                        ),
+                      )),
                       TextSpan(
                           text: authController.user.value.maxRank == 0
                               ? "당첨 경험 없음"
