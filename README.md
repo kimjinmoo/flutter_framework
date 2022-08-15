@@ -49,7 +49,16 @@ numberpicker: ^2.1.1
 #### 3. 환경변수 적용
 env 복사  
 .env.development  
-.env.production   
+.env.production
+
+pubspec.yaml 추가  
+
+```yaml
+flutter:
+assets:
+- .env.development
+- .env.production
+```
 
 
 #### 4. 옵션 선택
