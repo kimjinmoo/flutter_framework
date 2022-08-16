@@ -20,6 +20,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 void main() async {
+  // 구글 에러 수집을 위해 적용
   await runZonedGuarded(() async {
     // 계정 초기화
     initialize();
@@ -27,17 +28,15 @@ void main() async {
     await dotenv.load(fileName: Environment.fileName);
     // 엔진과 위젯 바인딩으 완료 되기 전까지 대기
     WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+    // 파이어베이스 적용
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     // 광고 초기화
     MobileAds.instance.initialize();
     // 스플래시
     // 지연 완료 후 FlutterNativeSplash.remove() 호출
     FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
-    WidgetsFlutterBinding.ensureInitialized();
-    // 파이어베이스 적용
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
     // 구글 크래쉬 적용
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
