@@ -24,6 +24,25 @@ class QnaWebviewState extends State<QnaWebview> {
   @override
   void initState() {
     super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..runJavaScript('document.body.style.overflow = \'hidden\';')
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
+          },
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {
+            setState(() {
+              isLoading = false;
+            });
+          },
+          onWebResourceError: (WebResourceError error) {},
+        ),
+      )
+      ..loadRequest(Uri.parse('https://www.grepiu.com/support?offNav=off'));
   }
 
   @override
@@ -40,21 +59,7 @@ class QnaWebviewState extends State<QnaWebview> {
         ),
         body: SafeArea(child: Stack(
           children: [
-            WebView(
-              zoomEnabled: false,
-              javascriptMode: JavascriptMode.unrestricted,
-              initialUrl: 'https://www.grepiu.com/support?offNav=off',
-              onWebViewCreated: (WebViewController webViewController) {
-                _controller = webViewController;
-              },
-              gestureNavigationEnabled: true,
-              onPageFinished: (finish) {
-                _controller.runJavascript('document.body.style.overflow = \'hidden\';');
-                setState(() {
-                  isLoading = false;
-                });
-              },
-            ),
+            WebViewWidget(controller: _controller),
             isLoading ? Center( child: CircularProgressIndicator(),)
                 : Stack(),
           ],

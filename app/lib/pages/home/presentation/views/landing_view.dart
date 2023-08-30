@@ -1,16 +1,15 @@
-import 'package:lotto/pages/home/presentation/controllers/home_controller.dart';
-import 'package:lotto/pages/home/presentation/controllers/landing_controller.dart';
-import 'package:lotto/pages/info/presentation/views/info_view.dart';
-import 'package:lotto/pages/maker/presentation/controllers/maker_controller.dart';
-import 'package:lotto/pages/home/presentation/views/home_view.dart';
-import 'package:lotto/pages/maker/presentation/views/maker_view.dart';
-import 'package:lotto/pages/setting/presentation/views/setting_view.dart';
-import 'package:lotto/pages/history/presentation/views/history_view.dart';
-import 'package:lotto/pages/info/presentation/views/status_view.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:lotto/pages/history/presentation/views/history_view.dart';
+import 'package:lotto/pages/home/presentation/controllers/home_controller.dart';
+import 'package:lotto/pages/home/presentation/controllers/landing_controller.dart';
+import 'package:lotto/pages/home/presentation/views/home_view.dart';
+import 'package:lotto/pages/info/presentation/views/info_view.dart';
+import 'package:lotto/pages/maker/presentation/controllers/maker_controller.dart';
+import 'package:lotto/pages/maker/presentation/views/maker_view.dart';
+import 'package:lotto/pages/setting/presentation/views/setting_view.dart';
 
 ///
 /// 랜딩페이지
@@ -53,10 +52,11 @@ class LandingView extends GetView<LandingController> {
             BottomNavigationBarItem(
               icon: Container(
                 margin: EdgeInsets.only(bottom: 7),
-                child: Badge(
-                    animationType: BadgeAnimationType.scale,
-                    badgeColor: Colors.black,
-                    alignment: Alignment.bottomRight,
+                child: badges.Badge(
+                    badgeAnimation: badges.BadgeAnimation.scale(),
+                    badgeStyle: badges.BadgeStyle(
+                      badgeColor: Colors.black,
+                    ),
                     badgeContent: Text(
                         homeController.myLottoHistory.value.numbers.isEmpty
                             ? "0"
@@ -75,12 +75,14 @@ class LandingView extends GetView<LandingController> {
                   width: 50,
                   margin: EdgeInsets.only(bottom: 7),
                   child: makerController.isProcess.value
-                      ? Badge(
-                          animationType: BadgeAnimationType.scale,
-                          position: BadgePosition.topEnd(top: -5, end: -5),
+                      ? badges.Badge(
+                    position: badges.BadgePosition.topEnd(top: -5, end: -5),
+                    badgeAnimation: badges.BadgeAnimation.scale(),
+
                           stackFit: StackFit.expand,
-                          badgeColor: Color.fromRGBO(87, 87, 87, 1.0),
-                          toAnimate: true,
+                          badgeStyle: badges.BadgeStyle(
+                            badgeColor: Color.fromRGBO(87, 87, 87, 1.0),
+                          ),
                           badgeContent: Text(
                             "...",
                             style: TextStyle(color: Colors.white),

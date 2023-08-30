@@ -23,6 +23,30 @@ class LottoTotalStatisticsWebviewState extends State<LottoTotalStatisticsWebview
   @override
   void initState() {
     super.initState();
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..runJavaScript('document.body.style.overflow = \'hidden\';')
+      ..enableZoom(false)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            if(progress < 100) {
+              setState(() {
+                isLoading = true;
+              });
+            }
+          },
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {
+            setState(() {
+              isLoading = false;
+            });
+          },
+          onWebResourceError: (WebResourceError error) {},
+        ),
+      )
+      ..loadRequest(Uri.parse('https://www.grepiu.com/toy/lotto/total-statistics?offNav=off'));
   }
 
   @override
@@ -40,31 +64,7 @@ class LottoTotalStatisticsWebviewState extends State<LottoTotalStatisticsWebview
             child: Container(
               child: Stack(
                 children: [
-                  WebView(
-                    onWebViewCreated: (WebViewController webViewController) {
-                      _webViewController = webViewController;
-                    },
-                    javascriptMode: JavascriptMode.unrestricted,
-                    initialUrl: 'https://www.grepiu.com/toy/lotto/total-statistics?offNav=off',
-                    onPageFinished: (finish) {
-                      _webViewController.runJavascript('document.body.style.overflow = \'hidden\';');
-                      setState(() {
-                        isLoading = false;
-                      });
-                    },
-                    onProgress: (int progress) {
-                      if(progress < 100) {
-                        setState(() {
-                          isLoading = true;
-                        });
-                      }
-                    },
-                    gestureNavigationEnabled: false,
-                    zoomEnabled: false,
-                    onWebResourceError: (e) {
-                      print(e);
-                    },
-                  ),
+                  WebViewWidget(controller: _webViewController),
                   isLoading
                       ? Center(
                     child: CircularProgressIndicator(),

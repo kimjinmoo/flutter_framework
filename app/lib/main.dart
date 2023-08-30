@@ -40,9 +40,6 @@ void main() async {
     // 구글 크래쉬 적용
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-    // 웹뷰 초기화
-    if(Platform.isAndroid) WebView.platform = AndroidWebView();
-
     // 스크린 모드를 설정한다.
     // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     runApp(GetMaterialApp(
